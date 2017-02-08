@@ -32,8 +32,7 @@ function Promise(executor){
 					self.onResolveCallback[i](value);
 				}
 			}	
-		},0);
-		
+		},0);	
 	}
 
 	//执行失败的函数

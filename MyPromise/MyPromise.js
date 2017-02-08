@@ -88,6 +88,7 @@ function resolvePromise(promise2, x, resolve, reject) {
   }
 }
 
+
 Promise.prototype.then = function(onResolved, onRejected) {
   var self = this
   var promise2
@@ -147,6 +148,7 @@ Promise.prototype.then = function(onResolved, onRejected) {
     })
   }
 }
+
 
 Promise.prototype.catch = function(onRejected) {
   return this.then(null, onRejected)
