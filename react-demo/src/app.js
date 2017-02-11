@@ -1,18 +1,22 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import {Tabs ,TabNav ,TabContent,TabPane} from'./com/tab';
 
 function Page(){
-	const test = ['react','hello word','2017.2.1'];
-	
-	
+	let tabChange = function(now,perv){
+		console.log(now,perv);
+	}
 
 	return(
-		<div>
-			<h1>测试一个React</h1>
-			<ul>
-				{test.map(item => (<li>{item}</li>))}		
-			</ul>
-		</div>
+		<Tabs classPrefix={'tabs'} defaultActiveIndex = {0} className='tabs-bar'
+			onChange={tabChange}
+			children={[
+				<TabPane key={0} tab={'tab 1'}>第一个tab里的内容</TabPane>,
+				<TabPane key={1} tab={'tab 2'}>第二个tab里的内容</TabPane>,
+				<TabPane key={2} tab={'tab 3'}>第三个tab里的内容</TabPane>,
+			]}
+		>
+		</Tabs>
 	);
 }
 
