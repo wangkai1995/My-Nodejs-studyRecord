@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-//DMOE 1
+//DMOE 1 tab
 import {Tabs ,TabNav ,TabContent,TabPane} from'./com/tab';
-//DMOE 2
+//DMOE 2 事件系统
 import {ImgTest} from './com/eventDemo1';
-//DMOE 3
+//DMOE 3 表单
 import {From} from './com/from';
-
+//DMOE 4 高阶组件
+import MyContainer from './com/higher_fun_1';
+//DMOE 5 组合高阶组件
+import {InputQuery} from './com/higher_fun_2';
 
 
 
@@ -36,8 +39,20 @@ function Page(){
 
 
 	/*********DEMO 3**********/
+	// return (
+	// 	<From></From>
+	// )
+	
+
+	/****** Demo 4  *********/
+	// return (
+	// 	<MyContainer test={'test11'} ></MyContainer>
+	// )
+	
+
+	/******** Demo 5 *********/
 	return (
-		<From></From>
+		<InputQuery></InputQuery>
 	)
 
 
