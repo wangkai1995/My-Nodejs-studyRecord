@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-
+ 
 
 const MyContainer = (WrappedComponent) =>
 	class extends Component{

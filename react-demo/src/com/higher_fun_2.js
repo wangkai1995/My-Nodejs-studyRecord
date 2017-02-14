@@ -2,7 +2,7 @@ import React,{Component ,PropTypes } from 'react';
 import {compose} from 'react-compose';
 import classnames from 'classnames';
 
-
+ 
 // 输入框
 //@props.classPrefix = 最外层样式前缀
 //@props.queryValue = 输入input值

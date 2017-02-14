@@ -12,7 +12,7 @@ import MyContainer from './com/higher_fun_1';
 import {InputQuery} from './com/higher_fun_2';
 
 
-
+ 
 function Page(){
 	/************DEMO 1**********/
 	// let tabChange = function(now,perv){
