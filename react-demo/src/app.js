@@ -9,7 +9,6 @@ import {From} from './com/from';
 
 
 
-
 function Page(){
 	/************DEMO 1**********/
 	// let tabChange = function(now,perv){
