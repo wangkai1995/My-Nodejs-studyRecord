@@ -4,6 +4,7 @@ import React,{Component} from 'react';
 class From extends Component{
 
 	render(){
+		
 		return (
 			<div className='from-demo-wap'>
 				<InputText></InputText>
