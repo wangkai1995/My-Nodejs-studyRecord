@@ -14,7 +14,13 @@ import {InputQuery} from './com/higher_fun_2';
 //router test
 import {Router ,Route , IndexRoute, Redirect ,Link ,hashHistory ,browserHistory} from 'react-router';
 
-test
+//redex demo1
+import ReduxDemo from './com/redux_1';
+
+//执行一下
+
+
+//test
 function Page(){
 	/************DEMO 1**********/
 	// let tabChange = function(now,perv){
@@ -44,13 +50,17 @@ function Page(){
 	// 	<From></From>
 	// )
 	
+	
 	/******* DEMO4*********/
 	return (
-		<InputQuery></InputQuery>
+		<ReduxDemo/>
 	)
+
 }
 
 ReactDom.render(<Page/>,document.getElementById('app'));
+
+
 
 
 /******************************* 关于 react - router 的部分********************************************/
