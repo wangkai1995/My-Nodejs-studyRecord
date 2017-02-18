@@ -20,18 +20,31 @@ module.exports={
 	//监控文件
 	module:{
 		loaders:[{
+			//监听jsx
 			test: /\.jsx?$/,
 			include:[
 				path.resolve(__dirname,'src'),
 			],
 			loaders:['react-hot','babel'],
-		},{
-			test:/\.sass$/,
+		}
+		,{
+			//开启css module
+			test: /\.scss$/,
+			// exclude: path.resolve(__dirname,'src'),
 			include:[
 				path.resolve(__dirname,'src'),
 			],
-			loader:'style!css!sass?sourceMap=true&sourceMapContents=true',
-		}],
+			loader: 'style!css?modules&localIdentName=[name]__[local]__[hash:base64:5]!sass?sourceMap=true',
+		}
+		// },{
+		// 	//监听sass
+		// 	test:/\.scss$/,
+		// 	include:[
+		// 		path.resolve(__dirname,'src'),
+		// 	],
+		// 	loader:'style!css!sass?sourceMap=true&sourceMapContents=true',
+		// }
+		],
 	},
 
 	resolve:{
