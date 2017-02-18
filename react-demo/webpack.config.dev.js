@@ -14,7 +14,11 @@ module.exports={
 	},
 	//输出文件
 	output:{
+		//文件命名
 		filename:'[name].js',
+		//分片文件 用来异步加载
+		chunkFilename: '[name].[chunkhash].js',
+		//输出目录
 		publicPath:'/static/',
 	},
 	//监控文件
