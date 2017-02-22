@@ -19,26 +19,35 @@ import {Router ,Route , IndexRoute, Redirect ,Link ,hashHistory ,browserHistory}
 //redex demo1
 import ReduxDemo from './com/redux_1';
 
-//执行一下
+//redex middleware test
+import { createStore , applyMiddleware } from 'redux';
+// import thunkMiddleware from './com/redux_middleware';
+
+import aaa from './com/redux_2';
+
 
 
 //test
 function Page(){
+
+	return <div>测试</div>
+
 	/************DEMO 1**********/
-	let tabChange = function(now,perv){
-		console.log(now,perv);
-	}
-	return(
-		<Tabs classPrefix={'tabs'} defaultActiveIndex = {0} className='tabs-bar'
-			onChange={ tabChange }
-			children={[
-				<TabPane key={0} order={0}  tab={'tab 1'} >第一个tab里的内容</TabPane>,
-				<TabPane key={1} order={1}  tab={'tab 2'} >第二个tab里的内容</TabPane>,
-				<TabPane key={2} order={2}  tab={'tab 3'} >第三个tab里的内容</TabPane>,
-			]}
-		>
-		</Tabs>
-	);
+	// let tabChange = function(now,perv){
+	// 	// console.log(now,perv);
+	// 	// myMiddleware();
+	// }
+	// return(
+	// 	<Tabs classPrefix={'tabs'} defaultActiveIndex = {0} className='tabs-bar'
+	// 		onChange={ tabChange }
+	// 		children={[
+	// 			<TabPane key={0} order={0}  tab={'tab 1'} >第一个tab里的内容</TabPane>,
+	// 			<TabPane key={1} order={1}  tab={'tab 2'} >第二个tab里的内容</TabPane>,
+	// 			<TabPane key={2} order={2}  tab={'tab 3'} >第三个tab里的内容</TabPane>,
+	// 		]}
+	// 	>
+	// 	</Tabs>
+	// );
 	
 
 	// let tabChange = function(now,perv){
@@ -79,11 +88,95 @@ function Page(){
 	// return (
 	// 	<ReduxDemo/>
 	// )
-
-
 }
 
 ReactDom.render(<Page/>,document.getElementById('app'));
+
+
+
+
+
+
+/***************** 关于 redux 中间件的部分      **********************/
+
+// function testMiddleware(){
+// 	return next => action =>{
+// 		console.log(action,new Date().getTime(),5555 );
+
+// 		if( !action.url && !Array.isArray(action.types) ){
+// 			return next(action);
+// 		}
+// 	}
+// }
+
+// function thunkMiddleware({ dispatch, getState }) {
+//     return next => action =>{
+//     	console.log(action,new Date().getTime() );
+//     	typeof action === 'function' ?
+//       	action(dispatch, getState) :
+//       	next(action);
+//     }
+// }
+
+// function getTest(dispatch,getState){
+// 	 console.log('dwaasdawcc',new Date().getTime() );
+// 	 dispatch({type:'ADD_TEST',payload:88});
+// 	 console.log('aaaaaaaa',new Date().getTime() );
+// }
+
+
+// const testTimeMiddleware = store => next => action =>{
+// 	if( !action.url && !Array.isArray(action.types) ){
+// 		return next(action);
+// 	}
+
+// 	next({
+// 		type:'TEST-LOAD',
+// 		load: true,
+// 		...action,
+// 	});
+
+// 	setTimeout(function(){
+// 		next({
+// 			type:'TEST-SUCCESS',
+// 			load: false,
+// 			payload: '测试成功',
+// 		});
+// 	},2000);
+
+
+// }
+
+
+//执行一下
+// function myMiddleware(){
+
+// 	var testCreateStroe = applyMiddleware(
+// 			testTimeMiddleware,
+// 			testMiddleware,
+// 		)(createStore);
+
+//     var store = testCreateStroe((state = 0 , action) =>{
+
+//     		console.log(action,'5565644');
+
+//             switch(action.type){
+//                 case 'ADD_COUNT' :
+//                     return state + action.payload;
+//                 case 'REDUCE_COUNT' :
+//                     return state - action.payload;
+//                 default :
+//                     return state;
+//             }
+//         });
+
+
+//    	store.dispatch( {url:'ceshi',types:['aaaa','vvvvv']} );
+
+// }
+
+// myMiddleware();
+
 
 
 

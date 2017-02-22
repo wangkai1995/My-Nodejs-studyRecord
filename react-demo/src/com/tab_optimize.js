@@ -136,7 +136,7 @@ class TabNav extends Component{
 		const node = ReactDom.findDOMNode(this);
 		const el = node.querySelectorAll('li')[activeIndex];
 
-		console.log(node.querySelectorAll('li'));
+		// console.log(node.querySelectorAll('li'));
 		
 		this.setState({
 			inkBarWidth : getOuterWidth(el),
