@@ -10,7 +10,6 @@ import DevTools from './redux/DevTools';
 
 
 const store = configureStore();
-
 const history = syncHistoryWithStore( hashHistory , store );
 
 

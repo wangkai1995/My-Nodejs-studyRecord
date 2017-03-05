@@ -5,11 +5,11 @@ import { push } from 'react-router-redux';
 import PreviewList from '../../components/home/PreviewList';
 import { actions } from './HomeRedux' ;
 
+
 class Home extends Component {
 
 	render(){
 		const { list , listActions ,push} = this.props;
-
 		return(
 			<div>
 				<h1>Home</h1>

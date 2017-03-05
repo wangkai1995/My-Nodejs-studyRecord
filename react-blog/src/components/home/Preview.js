@@ -1,4 +1,5 @@
 import React,{ Component ,PropTypes } from 'react';
+import { Link } from 'react-router';
 import './Preview.css';
 
 
@@ -10,7 +11,7 @@ class Preview extends Component{
 		push: PropTypes.func,
 	};
 
-	handleNavigate(e,id){
+	handleNavigate(id,e){
 		e.preventDefault();
 		this.props.push(id);
 	}
@@ -20,8 +21,8 @@ class Preview extends Component{
 		return (
 			<article className="article-preview-item">
 				<h1 className='title'> 
-					<a  href={`/detail/${id}`} 
-						onClick={this.handleNavigate.bind(this,id)}
+					<a  href={`/detail/:${id}`} 
+						onClick={ this.handleNavigate.bind(this,`/detail/:${id}`) }
 					>
 						{title} 
 					</a>

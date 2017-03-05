@@ -1,21 +1,30 @@
 
 
-function loadTableArticles(){
+function loadTableArticles(id){
+
+	if(!id){
+		var url = "http://localhost:3000/article";
+	}else{
+		var url = 'http://localhost:3000/article/'+id;
+	}
+	
  	return{
- 		url: 'http://localhost:3000/test',
- 		types: ['LOAD_TABLE_ARTICLES', 'LOAD_TABLE_ARTICLES_SUCCESS' ,'LOAD_TABLE_ARTICLES_ERROR']
+ 		url: url,
+ 		type: ['LOAD_TABLE_ARTICLES', 'LOAD_TABLE_ARTICLES_SUCCESS' ,'LOAD_TABLE_ARTICLES_ERROR']
  	};
 }
 
 
 const initialState = {
-	table: [],
+	articles: [],
+	query: '',
 	loading: true,
 	error: false
 };
 
 
 function tableReducer(state = initialState, action){
+
 	switch(action.type){
 
 		case 'CHANGE_QUERY':{
@@ -37,7 +46,7 @@ function tableReducer(state = initialState, action){
 			return{
 				...state,
 				loading:false,
-				table: action.payload,
+				articles: action.payload,
 				error:false
 			};
 		}
@@ -53,9 +62,29 @@ function tableReducer(state = initialState, action){
 		default:
 			return state;
 	}
+};
+
+
+function changeQuery(e){
+	var value = e.target.value.trim();
+	return{
+		type:'CHANGE_QUERY',
+		payload:{
+			query: value,
+		},
+	};
+};
+
+
+function search(){
+	return (dispatch,getState) =>{		
+		const { query } = getState().detail.tableReducer;
+		return dispatch( loadTableArticles(query) );
+	}
 }
 
 
-export loadTableArticles;
+
+export { loadTableArticles , changeQuery , search };
 
 export default tableReducer;

@@ -1,15 +1,18 @@
 import { combineReducers } from 'redux';
-import tableReducer,{ table } from '../../components/detail/TableRedux';
+import tableReducer from '../../components/detail/TableRedux';
+import modalReducer from '../../components/detail/ModalRedux';
+
 
 
 //action 
 export default combineReducers({
-	tableReducer
+	tableReducer,
+	modalReducer,
 });
 
 
-export const actions = {
-	table
-};
+export * as tableActions from '../../components/detail/TableRedux';
+
+export * as modalActions from '../../components/detail/ModalRedux';
 
 

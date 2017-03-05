@@ -6,15 +6,18 @@ const fetchMiddleware = store => next => action =>{
 	}
 
 	const [ LOADING , SUCCESS ,ERROR ] = action.type;
-	
 
 	next({
 		type : LOADING,
 		loading : true,
-		...action,
+		// ...action,
 	});
 
-	fetch(action.url , { params: action.params ? action.params : null})
+	fetch( action.url , 
+			{ 	method:action.method? action.method: 'GET',
+		 		params: action.params ? action.params : null
+ 			}
+ 		)
 		.then( result =>{
 			result.json().then( data =>{
 				next({

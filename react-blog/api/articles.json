@@ -1,10 +1,25 @@
-
 {
-	"test" :{
-		"articleList": [
-		 	{ "id": 1, "title": "json-server", "date": "2017.2.26" , "description" : "测试一cccc下" },
-		 	{ "id": 2, "title": "test",      "date": "2017.2.27" , "description" : "测试一下dwadwa" },
-		 	{ "id": 3, "title": "test-server", "date": "2017.2.28" , "description" : "测试一下1111" }
-		]
-	}
+  "test": {
+    "articleList": [
+      {
+        "id": 1,
+        "title": "json-server",
+        "date": "2017.2.26",
+        "description": "测试一cccc下"
+      },
+      {
+        "id": 2,
+        "title": "test",
+        "date": "2017.2.27",
+        "description": "测试一下dwadwa"
+      },
+      {
+        "id": 3,
+        "title": "test-server",
+        "date": "2017.2.28",
+        "description": "测试一下1111"
+      }
+    ]
+  },
+  "article": {}
 }

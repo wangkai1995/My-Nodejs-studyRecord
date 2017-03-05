@@ -15,8 +15,7 @@ class PreviewList extends Component{
 	}
 
 	render(){
-		const { loading, error, articleList } = this.props;
-
+		const { loading, error, articleList ,push } = this.props;
 		if(error){
 			return <p className="message">出错了</p>
 		}
@@ -28,7 +27,7 @@ class PreviewList extends Component{
 		//注意这里普通的函数map的元素 需要在作用域里面执行 并且外面要包裹父元素
 		const list = articleList.map( item =>  { 
 					return (
-						<Preview {...item} key={item.id} ></Preview>
+						<Preview {...item} key={item.id} push={push} ></Preview>
 					);
 				});
 		//必须这样 不然无法执行 会报类型错误
