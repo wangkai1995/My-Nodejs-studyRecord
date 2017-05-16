@@ -4,7 +4,7 @@ var https = require('http');
 
 //查询请求
 function getQuery(){
-    var query = 'http://sou.zhaopin.com/jobs/searchresult.ashx?jl='+encodeURI('深圳')+'&kw='+encodeURI('前台')+'&sm=0&p=1';
+    var query = 'http://sou.zhaopin.com/jobs/searchresult.ashx?jl='+encodeURI('深圳')+'&kw='+encodeURI('安卓')+'&sm=0&p=1';
     https.get(query,function(requset,response){
         var html = '';
 
@@ -17,7 +17,6 @@ function getQuery(){
         })
     });
 };
-
 
 //过滤开始
 function filterStart(html){
@@ -32,12 +31,14 @@ function filterStart(html){
             buff.jodDetail = filterJodDetail( tr[1] ); 
         }
         jodData.push(buff);
+
+        console.log(buff);
+
    })
 
-   console.log(jodData);
+
    return jodData;
 }
-
 
 
 
