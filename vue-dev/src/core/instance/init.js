@@ -65,6 +65,7 @@ export function initMixin (Vue: Class<Component>) {
       initInternalComponent(vm, options)
     } else {
       //如果不是组件 那么混合
+      //获取配置参数
       vm.$options = mergeOptions(
         //接收构造函数参数
         //获取父级构造参数

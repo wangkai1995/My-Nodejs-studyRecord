@@ -24,6 +24,8 @@ export default class VNode {
   isAsyncPlaceholder: boolean;
   ssrContext: ?Object;
 
+
+
   constructor (
     tag?: string,
     data?: VNodeData,
@@ -105,3 +107,5 @@ export function cloneVNodes (vnodes: Array<VNode>): Array<VNode> {
   }
   return res
 }
+
+

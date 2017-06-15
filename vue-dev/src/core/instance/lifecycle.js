@@ -69,21 +69,40 @@ export function initLifecycle (vm: Component) {
 
 
 
+//生命周期方法初始化
 export function lifecycleMixin (Vue: Class<Component>) {
+
+  //添加原型方法 更新vue组件
+  //传入虚拟节点对象
+  //保持标志？？ hydrating？
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
+    //如果存在准备更新生命周期
+    //那么调用钩子函数
     if (vm._isMounted) {
       callHook(vm, 'beforeUpdate')
     }
+
+    //获取上一个DOM对象
     const prevEl = vm.$el
+    //获取上一个 虚拟节点对象
     const prevVnode = vm._vnode
+    //获取上一个激活的实例化对象
     const prevActiveInstance = activeInstance
+    //激活的实例化对象重新赋值
+    //activeInstance 是全局对象 这里没显示声明而已
     activeInstance = vm
+    //重新获取传入的虚拟节点
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
+    //如果上一个虚拟结点不存在
     if (!prevVnode) {
+      //重新渲染
       // initial render
+      //传入DOM, 虚拟节点, 维护状态，不取消唯一,父DOM，refDOM
+      //ref DOM 参考react
+      //react ref 是以对象形式 键值对方式 保留虚拟DOM的实例DOM
       vm.$el = vm.__patch__(
         vm.$el, vnode, hydrating, false /* removeOnly */,
         vm.$options._parentElm,
@@ -91,17 +110,23 @@ export function lifecycleMixin (Vue: Class<Component>) {
       )
     } else {
       // updates
+      // 更新DOM
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
+    // 全局激活实例 切换到上一个激活
     activeInstance = prevActiveInstance
     // update __vue__ reference
+    // 更新_vue_引用
+    // 如果上个DOM存在的话
     if (prevEl) {
       prevEl.__vue__ = null
     }
     if (vm.$el) {
+      // DOM的vue对象 重新更新
       vm.$el.__vue__ = vm
     }
     // if parent is an HOC, update its $el as well
+    // 父组件虚拟节点如果和当前组件虚拟节点一致 则更新过去
     if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
       vm.$parent.$el = vm.$el
     }
@@ -109,6 +134,11 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // updated in a parent's updated hook.
   }
 
+
+
+
+
+  //原型方法强制更新
   Vue.prototype.$forceUpdate = function () {
     const vm: Component = this
     if (vm._watcher) {
@@ -116,18 +146,26 @@ export function lifecycleMixin (Vue: Class<Component>) {
     }
   }
 
+
+  //原型方法 卸载vue
   Vue.prototype.$destroy = function () {
     const vm: Component = this
+    //如果已经卸载 则返回
     if (vm._isBeingDestroyed) {
       return
     }
+    //钩子函数即将卸载
     callHook(vm, 'beforeDestroy')
+    //卸载标志赋值
     vm._isBeingDestroyed = true
     // remove self from parent
+    //获取父组件
     const parent = vm.$parent
+    //如果父组件还存在 则从父组件中移除自己
     if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
       remove(parent.$children, vm)
     }
+    //如果存在watcher 则卸载
     // teardown watchers
     if (vm._watcher) {
       vm._watcher.teardown()
@@ -138,25 +176,37 @@ export function lifecycleMixin (Vue: Class<Component>) {
     }
     // remove reference from data ob
     // frozen object may not have observer.
+    // 如果监听对象存在 
+    // 则卸载observer
     if (vm._data.__ob__) {
       vm._data.__ob__.vmCount--
     }
+    // 赋值卸载标志
     // call the last hook...
     vm._isDestroyed = true
     // invoke destroy hooks on current rendered tree
+    // 清除自己的渲染树
     vm.__patch__(vm._vnode, null)
     // fire destroyed hook
+    // 触发卸载生命周期钩子
     callHook(vm, 'destroyed')
     // turn off all instance listeners.
+    // 取消全部实例监听
     vm.$off()
     // remove __vue__ reference
     if (vm.$el) {
+      //DOM组件 vue对象注销
       vm.$el.__vue__ = null
     }
     // remove reference to DOM nodes (prevents leak)
+    // 父节点DOM和REF DOM全部 赋值为null
     vm.$options._parentElm = vm.$options._refElm = null
   }
 }
+
+
+
+
 
 export function mountComponent (
   vm: Component,
@@ -319,18 +369,27 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
   }
 }
 
+
+//执行钩子函数
 export function callHook (vm: Component, hook: string) {
+  //获取传入的配置参数中的 生命周期钩子执行函数
   const handlers = vm.$options[hook]
+  //如果存在
   if (handlers) {
     for (let i = 0, j = handlers.length; i < j; i++) {
       try {
+        //执行生命周期钩子函数
         handlers[i].call(vm)
       } catch (e) {
+        //钩子函数错误
         handleError(e, vm, `${hook} hook`)
       }
     }
   }
+  //如果VM事件中存在钩子函数
+  //比如..类似VM-on
   if (vm._hasHookEvent) {
+    //那么执行
     vm.$emit('hook:' + hook)
   }
 }

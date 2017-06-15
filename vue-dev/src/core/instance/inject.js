@@ -14,9 +14,14 @@ export function initProvide (vm: Component) {
   }
 }
 
+
+
+//初始化注入
 export function initInjections (vm: Component) {
+  //接收注入参数
   const result = resolveInject(vm.$options.inject, vm)
   if (result) {
+    //对注入内容进行监听
     Object.keys(result).forEach(key => {
       /* istanbul ignore else */
       if (process.env.NODE_ENV !== 'production') {
@@ -35,33 +40,55 @@ export function initInjections (vm: Component) {
   }
 }
 
-export function resolveInject (inject: any, vm: Component): ?Object {
-  if (inject) {
-    // inject is :any because flow is not smart enough to figure out cached
-    // isArray here
-    const isArray = Array.isArray(inject)
-    const result = Object.create(null)
-    const keys = isArray
-      ? inject
-      : hasSymbol
-        ? Reflect.ownKeys(inject)
-        : Object.keys(inject)
 
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i]
-      const provideKey = isArray ? key : inject[key]
-      let source = vm
-      while (source) {
-        if (source._provided && provideKey in source._provided) {
-          result[key] = source._provided[provideKey]
-          break
+
+
+
+
+
+
+//接收注入参数
+//inject = option.inject
+export function resolveInject (inject: any, vm: Component): ?Object {
+    //如果存在注入
+    if (inject) {
+      // inject is :any because flow is not smart enough to figure out cached
+      // isArray here
+      //注入是否是数组
+      const isArray = Array.isArray(inject)
+      //初始化返回值
+      const result = Object.create(null)
+      //获取注入的KEY
+      const keys = isArray
+        ? inject
+        : hasSymbol
+          ? Reflect.ownKeys(inject)
+          : Object.keys(inject)
+      //循环key
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        //获取注入内容
+        const provideKey = isArray ? key : inject[key]
+        let source = vm
+        //这里获取VUE的注入
+        //一直到根节点
+        while (source) {
+          if (source._provided && provideKey in source._provided) {
+            result[key] = source._provided[provideKey]
+            break
+          }
+          source = source.$parent
         }
-        source = source.$parent
+        if (process.env.NODE_ENV !== 'production' && !hasOwn(result, key)) {
+          warn(`Injection "${key}" not found`, vm)
+        }
       }
-      if (process.env.NODE_ENV !== 'production' && !hasOwn(result, key)) {
-        warn(`Injection "${key}" not found`, vm)
-      }
+      //返回注入内容
+      return result
     }
-    return result
-  }
 }
+
+
+
+
+

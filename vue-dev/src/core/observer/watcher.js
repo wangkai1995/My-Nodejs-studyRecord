@@ -14,7 +14,11 @@ import {
 
 import type { ISet } from '../util/index'
 
+
+//全局唯一对象
 let uid = 0
+
+
 
 /**
  * A watcher parses an expression, collects dependencies,
@@ -39,14 +43,21 @@ export default class Watcher {
   getter: Function;
   value: any;
 
+  //vm=vue组件
+  //说明字符串或者函数
+  //回调
+  //配置对象
   constructor (
     vm: Component,
     expOrFn: string | Function,
     cb: Function,
     options?: Object
   ) {
+    //获取VM对象
     this.vm = vm
+    //vm监听者对象添加自己
     vm._watchers.push(this)
+    //获取配置
     // options
     if (options) {
       this.deep = !!options.deep

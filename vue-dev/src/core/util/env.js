@@ -31,6 +31,9 @@ if (inBrowser) {
   } catch (e) {}
 }
 
+
+
+// 判断vue是否是服务端渲染
 // this needs to be lazy-evaled because vue may be required before
 // vue-server-renderer can set VUE_ENV
 let _isServer
@@ -48,13 +51,17 @@ export const isServerRendering = () => {
   return _isServer
 }
 
+
+
 // detect devtools
 export const devtools = inBrowser && window.__VUE_DEVTOOLS_GLOBAL_HOOK__
+
 
 /* istanbul ignore next */
 export function isNative (Ctor: any): boolean {
   return typeof Ctor === 'function' && /native code/.test(Ctor.toString())
 }
+
 
 export const hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
@@ -63,20 +70,16 @@ export const hasSymbol =
 /**
  * Defer a task to execute it asynchronously.
  */
- // 延期派发异步函数
 export const nextTick = (function () {
   const callbacks = []
   let pending = false
   let timerFunc
 
   function nextTickHandler () {
-    //等待状态
     pending = false
-    //获取复制回调函数
     const copies = callbacks.slice(0)
     callbacks.length = 0
     for (let i = 0; i < copies.length; i++) {
-      //执行
       copies[i]()
     }
   }
@@ -173,6 +176,9 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
     }
   }
 }
+
+
+
 
 interface ISet {
   has(key: string | number): boolean;
