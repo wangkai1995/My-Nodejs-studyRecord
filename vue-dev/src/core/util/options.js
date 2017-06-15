@@ -262,6 +262,9 @@ function normalizeDirectives (options: Object) {
   }
 }
 
+
+//混合传入的两个对象的option
+//混合父对象和子对象的option
 /**
  * Merge two option objects into a new one.
  * Core utility used in both instantiation and inheritance.
@@ -271,10 +274,12 @@ export function mergeOptions (
   child: Object,
   vm?: Component
 ): Object {
+  //不是生产环境 判断child 是否是有效组件
   if (process.env.NODE_ENV !== 'production') {
     checkComponents(child)
   }
 
+  //如果child存在
   if (typeof child === 'function') {
     child = child.options
   }
