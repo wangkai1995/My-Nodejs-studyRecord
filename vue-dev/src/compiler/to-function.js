@@ -17,21 +17,27 @@ function createFunction (code, errors) {
   }
 }
 
+//创建编译模板函数
 export function createCompileToFunctionFn (compile: Function): Function {
+  //如果存在缓存 那么读取 如果没有建立空
   const cache: {
     [key: string]: CompiledFunctionResult;
   } = Object.create(null)
-
+  //传入模板
+  //配置对象 是否解密和分隔符
+  //VM对象
   return function compileToFunctions (
     template: string,
     options?: CompilerOptions,
     vm?: Component
   ): CompiledFunctionResult {
+    //获取配置
     options = options || {}
 
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production') {
       // detect possible CSP restriction
+      // 开发环境 测试new Function构造函数是否可用
       try {
         new Function('return 1')
       } catch (e) {
@@ -48,14 +54,17 @@ export function createCompileToFunctionFn (compile: Function): Function {
     }
 
     // check cache
+    // 获取缓存KEY 为options.delimiters 或者模板名template
     const key = options.delimiters
       ? String(options.delimiters) + template
       : template
     if (cache[key]) {
+      //存入模板缓存
       return cache[key]
     }
 
     // compile
+    //直接传入的编译函数 传入模板和option
     const compiled = compile(template, options)
 
     // check compilation errors/tips

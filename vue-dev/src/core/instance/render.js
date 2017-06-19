@@ -161,7 +161,7 @@ export function renderMixin (Vue: Class<Component>) {
   Vue.prototype._m = renderStatic
   //原型方法 解决过滤 Promise.resolve？
   Vue.prototype._f = resolveFilter
-  //原型方法 检查键值
+  //原型方法 检查event键值
   Vue.prototype._k = checkKeyCodes
   //原型方法 绑定对象属性
   Vue.prototype._b = bindObjectProps
