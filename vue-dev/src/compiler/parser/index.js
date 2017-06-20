@@ -107,6 +107,33 @@ export function parse (
     }
   }
 
+  /**
+    * isNonPhrasingTag *
+    某一些标签，如address,article,aside,base，
+    他们不能被p标签包裹，因此我们在遇到这些标签时需要小心处理，
+    作者把这些标签全都放入到了isNonPhrasingTag这个map对象中
+    
+    * canBeLeftOpenTag *
+    像colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr,source这些节点，
+    不会直接包裹同类型的节点，即 <td><td>...</td></td> 是错误的，
+    所以我们对于这类节点，
+    我们遇到相同类型tag时，应该结束上一个tag，
+    即 <td>xxx<td>xxx</td> 应该被解析为 <td>xxx</td><td>xxx</td>
+
+    * shouldDecodeNewlines *
+    这是IE上的一个bug, 如果dom节点的属性分多行书写，
+    那么它会把'\n'转义成 &#10; ,而其它浏览器并不会这么做，因此需要手工处理
+
+    * IS_REGEX_CAPTURING_BROKEN *
+    这是火狐浏览器关于正则的一个bug，
+    VUe的识别代码：
+    let IS_REGEX_CAPTURING_BROKEN = false
+    'x'.replace(/x(.)?/g, function (m, g) {
+      IS_REGEX_CAPTURING_BROKEN = g === ''
+    })
+
+  **/
+
 
   //开始解析
   //传入模板
@@ -320,8 +347,10 @@ export function parse (
       currentParent = stack[stack.length - 1]
       endPre(element)
     },
-    //错误函数
+    //处理文本函数
     chars (text: string) {
+      //如果当前父节点不存在
+      //报错返回
       if (!currentParent) {
         if (process.env.NODE_ENV !== 'production') {
           if (text === template) {
@@ -336,6 +365,7 @@ export function parse (
         }
         return
       }
+      // ie textarea 存在占位符BUG
       // IE textarea placeholder bug
       /* istanbul ignore if */
       if (isIE &&
@@ -344,13 +374,18 @@ export function parse (
       ) {
         return
       }
+      //获得子元素数组
       const children = currentParent.children
+      // inPre 是否是spirct style
+      // text修正
       text = inPre || text.trim()
         ? isTextTag(currentParent) ? text : decodeHTMLCached(text)
         // only preserve whitespace if its not right after a starting tag
         : preserveWhitespace && children.length ? ' ' : ''
+      //如果文本正确并且存在
       if (text) {
         let expression
+        //非pre保护 并且节点不为空字符串 提取表达式成功
         if (!inVPre && text !== ' ' && (expression = parseText(text, delimiters))) {
           children.push({
             type: 2,

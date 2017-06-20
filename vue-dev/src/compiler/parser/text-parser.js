@@ -13,6 +13,7 @@ const buildRegex = cached(delimiters => {
 })
 
 
+
 //解析文本
 //传入 文本字符串和分隔符
 export function parseText (
@@ -55,6 +56,7 @@ export function parseText (
   //返token 字符串
   return tokens.join('+')
 }
+
 
 
 

@@ -186,6 +186,13 @@ export function parseHTML (html, options) {
       if (textEnd >= 0) {
         //获取内容
         rest = html.slice(textEnd)
+        /*
+          这个while里面检测
+          标签没有结束
+          标签没有开始
+          标签不是<!--
+          标签不是<!
+        */
         while (
           !endTag.test(rest) &&
           !startTagOpen.test(rest) &&
@@ -193,20 +200,24 @@ export function parseHTML (html, options) {
           !conditionalComment.test(rest)
         ) {
           // < in plain text, be forgiving and treat it as text
+          //这里判断是不是简单文本
           next = rest.indexOf('<', 1)
           if (next < 0) break
           textEnd += next
           rest = html.slice(textEnd)
         }
+        //获取文本内容
         text = html.substring(0, textEnd)
+        //字符串推进到结束
         advance(textEnd)
       }
 
+      //判断是否结束了
       if (textEnd < 0) {
         text = html
         html = ''
       }
-
+      //配置字符串？并且text存在
       if (options.chars && text) {
         options.chars(text)
       }
@@ -365,7 +376,7 @@ export function parseHTML (html, options) {
   }
 
 
-  
+  //处理结尾标签
   function parseEndTag (tagName, start, end) {
     let pos, lowerCasedTagName
     if (start == null) start = index
