@@ -61,6 +61,12 @@ if (process.env.NODE_ENV !== 'production') {
     }
   }
 
+
+
+  //初始化代理 proxy
+  // var test = new Proxy(target,handle)
+  // 调用 test = XXX 也为 target = XXX;
+  // handle 传入为set的话
   initProxy = function initProxy (vm) {
     if (hasProxy) {
       // determine which proxy handler to use
@@ -75,4 +81,8 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
+
+
 export { initProxy }
+
+

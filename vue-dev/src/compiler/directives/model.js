@@ -33,11 +33,14 @@ export function genComponentModel (
 /**
  * Cross-platform codegen helper for generating v-model value assignment code.
  */
+ // v-model 分配编码
 export function genAssignmentCode (
   value: string,
   assignment: string
 ): string {
+  //解析model
   const modelRs = parseModel(value)
+  //
   if (modelRs.idx === null) {
     return `${value}=${assignment}`
   } else {
@@ -45,9 +48,14 @@ export function genAssignmentCode (
   }
 }
 
+
+
+
 /**
+   数组更新转换解析成指令模块
  * parse directive model to do the array update transform. a[idx] = val => $$a.splice($$idx, 1, val)
  *
+ * for循环可能出现下面情况
  * for loop possible cases:
  *
  * - test
@@ -64,8 +72,9 @@ let len, str, chr, index, expressionPos, expressionEndPos
 export function parseModel (val: string): Object {
   str = val
   len = str.length
+  //表达式开始 表达式结束
   index = expressionPos = expressionEndPos = 0
-
+  //如果没有[] 则直接返回表达式为字符串 ID为null
   if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len - 1) {
     return {
       exp: val,
@@ -76,8 +85,10 @@ export function parseModel (val: string): Object {
   while (!eof()) {
     chr = next()
     /* istanbul ignore if */
+    //判断是否是字符串开始 '或"
     if (isStringStart(chr)) {
       parseString(chr)
+      //如果等于[
     } else if (chr === 0x5B) {
       parseBracket(chr)
     }
@@ -89,18 +100,22 @@ export function parseModel (val: string): Object {
   }
 }
 
+//下一个字段
 function next (): number {
   return str.charCodeAt(++index)
 }
 
+//判断是否结束
 function eof (): boolean {
   return index >= len
 }
 
+//判断是否是字符串开始 '或"
 function isStringStart (chr: number): boolean {
   return chr === 0x22 || chr === 0x27
 }
 
+//解析支架
 function parseBracket (chr: number): void {
   let inBracket = 1
   expressionPos = index

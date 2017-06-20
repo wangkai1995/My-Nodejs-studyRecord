@@ -15,12 +15,18 @@ const idToTemplate = cached(id => {
 })
 
 const mount = Vue.prototype.$mount
+
+//原型方法挂载
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+
+
+  //获取元素
   el = el && query(el)
 
+  //如果元素是body或者是document直接报错
   /* istanbul ignore if */
   if (el === document.body || el === document.documentElement) {
     process.env.NODE_ENV !== 'production' && warn(
@@ -29,10 +35,14 @@ Vue.prototype.$mount = function (
     return this
   }
 
+  //获取配置
   const options = this.$options
   // resolve template/el and convert to render function
+  //如果不存在渲染属性
   if (!options.render) {
+    //获取模板
     let template = options.template
+    //如果模板存在
     if (template) {
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
@@ -53,7 +63,9 @@ Vue.prototype.$mount = function (
         }
         return this
       }
+    //如果模板不存在 元素存在
     } else if (el) {
+      //从el outerHtml获取元素模板
       template = getOuterHTML(el)
     }
     if (template) {
@@ -62,10 +74,16 @@ Vue.prototype.$mount = function (
         mark('compile')
       }
 
+      //执行模板转成函数
+      //编译模板
+      //compileToFunctions = src/compiler/to-function
       const { render, staticRenderFns } = compileToFunctions(template, {
+        //是否编译解码
         shouldDecodeNewlines,
+        //分隔符
         delimiters: options.delimiters
       }, this)
+      //
       options.render = render
       options.staticRenderFns = staticRenderFns
 
@@ -79,20 +97,29 @@ Vue.prototype.$mount = function (
   return mount.call(this, el, hydrating)
 }
 
+
+
+
+//获取template模板
 /**
  * Get outerHTML of elements, taking care
  * of SVG elements in IE as well.
  */
 function getOuterHTML (el: Element): string {
+  //如果存在 outerHTML方法
   if (el.outerHTML) {
     return el.outerHTML
   } else {
+    //不存在建立一个container元素
+    //加入自己 然后返回容器元素的innerHTML
     const container = document.createElement('div')
     container.appendChild(el.cloneNode(true))
     return container.innerHTML
   }
 }
 
+
 Vue.compile = compileToFunctions
 
 export default Vue
+

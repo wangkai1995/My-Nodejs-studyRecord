@@ -19,9 +19,11 @@ export function addProp (el: ASTElement, name: string, value: string) {
   (el.props || (el.props = [])).push({ name, value })
 }
 
+
 export function addAttr (el: ASTElement, name: string, value: string) {
   (el.attrs || (el.attrs = [])).push({ name, value })
 }
+
 
 export function addDirective (
   el: ASTElement,
@@ -33,6 +35,7 @@ export function addDirective (
 ) {
   (el.directives || (el.directives = [])).push({ name, rawName, value, arg, modifiers })
 }
+
 
 export function addHandler (
   el: ASTElement,
@@ -86,6 +89,8 @@ export function addHandler (
   }
 }
 
+
+
 export function getBindingAttr (
   el: ASTElement,
   name: string,
@@ -104,6 +109,8 @@ export function getBindingAttr (
   }
 }
 
+
+
 export function getAndRemoveAttr (el: ASTElement, name: string): ?string {
   let val
   if ((val = el.attrsMap[name]) != null) {
@@ -117,3 +124,4 @@ export function getAndRemoveAttr (el: ASTElement, name: string): ?string {
   }
   return val
 }
+

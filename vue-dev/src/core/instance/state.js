@@ -160,10 +160,13 @@ function initProps (vm: Component, propsOptions: Object) {
 function initData (vm: Component) {
   //获取数据
   let data = vm.$options.data
+  //这里如果data有值 那么会在之前的初始化中 data变成mergedInstanceDataFn() 
+  //如果是函数 跳转到option.js 中执行mergedInstanceDataFn()传入data和VM对象
   //如果data是函数 那么执行getData()获取数据 不是函数则直接获取
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
+
   //如果不是对象则初始化空对象并且报错
   if (!isPlainObject(data)) {
     data = {}
@@ -189,7 +192,10 @@ function initData (vm: Component) {
       )
     //key不是保留key
     } else if (!isReserved(keys[i])) {
-      //添加到原型数据 添加 双向绑定监听
+      //添加到数据代理
+      //绑定到 vm._data 属性中
+      //proxy是代理方法
+      //_data是option.data的一个备份
       proxy(vm, `_data`, keys[i])
     }
   }
@@ -197,6 +203,7 @@ function initData (vm: Component) {
   // observe data
   observe(data, true /* asRootData */)
 }
+
 
 
 
@@ -208,6 +215,8 @@ function getData (data: Function, vm: Component): any {
     return {}
   }
 }
+
+
 
 const computedWatcherOptions = { lazy: true }
 

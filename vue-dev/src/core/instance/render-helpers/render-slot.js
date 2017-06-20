@@ -19,7 +19,7 @@ export function renderSlot (
   bindObject: ?Object
 ): ?Array<VNode> {
   const scopedSlotFn = this.$scopedSlots[name]
-  //获取作用于插槽
+  //获取插槽作用域
   if (scopedSlotFn) { // scoped slot
     //拿到属性
     props = props || {}
@@ -28,7 +28,7 @@ export function renderSlot (
       //获取绑定数据的参数
       extend(props, bindObject)
     }
-    //返回插槽节点
+    //属性传入插槽作用域 返回插槽节点
     return scopedSlotFn(props) || fallback
   } else {
     //不存在则直接获取插槽

@@ -17,6 +17,3 @@ export function checkKeyCodes (
     return keyCodes !== eventKeyCode
   }
 }
-
-
-

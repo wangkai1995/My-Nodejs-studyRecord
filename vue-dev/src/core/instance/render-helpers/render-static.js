@@ -5,6 +5,7 @@ import { cloneVNode, cloneVNodes } from 'core/vdom/vnode'
 /**
  * Runtime helper for rendering static trees.
  */
+ //渲染静态节点
 export function renderStatic (
   index: number,
   isInFor?: boolean
@@ -53,6 +54,8 @@ function markStatic (
   }
 }
 
+
+//设置静态node 服务端渲染？
 function markStaticNode (node, key, isOnce) {
   node.isStatic = true
   node.key = key

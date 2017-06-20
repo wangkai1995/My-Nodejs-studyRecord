@@ -206,9 +206,8 @@ export function defineReactive (
   const getter = property && property.get
   const setter = property && property.set
 
-  //创建一个观察者对象
-  //如果 不存在observer 并且不是vue对象 则建立双向绑定对象并返回
-  //如果是vue对象 并且有observer 则返回observer
+
+  //子属性递归遍历创建 observer对象
   let childOb = observe(val)；
 
   //设置object.defineProperty

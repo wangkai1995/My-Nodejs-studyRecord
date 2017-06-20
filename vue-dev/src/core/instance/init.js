@@ -132,9 +132,9 @@ export function initMixin (Vue: Class<Component>) {
       vm.$mount(vm.$options.el)
     }
   }
-
-
 }
+
+
 
 
 

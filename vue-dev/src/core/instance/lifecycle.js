@@ -27,7 +27,6 @@ export let activeInstance: any = null
 export function initLifecycle (vm: Component) {
   //获取配置
   const options = vm.$options
-
   // locate first non-abstract parent
   // 父节点抽象定位?
   // 获取父节点
@@ -65,6 +64,7 @@ export function initLifecycle (vm: Component) {
   //是否准备卸载标志初始化
   vm._isBeingDestroyed = false
 }
+
 
 
 

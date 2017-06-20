@@ -143,7 +143,7 @@ export function renderMixin (Vue: Class<Component>) {
   // these are exposed on the instance prototype to reduce generated render
   // code size.
 
-  //原型方法标记 单次标记
+  //原型方法标记 标记节点为静态单次节点
   Vue.prototype._o = markOnce
   //原型方法 转成number
   Vue.prototype._n = toNumber
@@ -161,7 +161,7 @@ export function renderMixin (Vue: Class<Component>) {
   Vue.prototype._m = renderStatic
   //原型方法 解决过滤 Promise.resolve？
   Vue.prototype._f = resolveFilter
-  //原型方法 检查event键值
+  //原型方法 检查 event键值
   Vue.prototype._k = checkKeyCodes
   //原型方法 绑定对象属性
   Vue.prototype._b = bindObjectProps
@@ -172,6 +172,7 @@ export function renderMixin (Vue: Class<Component>) {
   //原型方法 解决插槽作用域 Promise.resolve？
   Vue.prototype._u = resolveScopedSlots
 }
+
 
 
 
