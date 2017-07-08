@@ -9,6 +9,8 @@ type TransformFunction = (el: ASTElement, code: string) => string;
 type DataGenFunction = (el: ASTElement) => string;
 type DirectiveFunction = (el: ASTElement, dir: ASTDirective, warn: Function) => boolean;
 
+
+//生成状态
 export class CodegenState {
   options: CompilerOptions;
   warn: Function;
@@ -18,16 +20,26 @@ export class CodegenState {
   maybeComponent: (el: ASTElement) => boolean;
   onceId: number;
   staticRenderFns: Array<string>;
-
+  
+  //生成状态构造函数
   constructor (options: CompilerOptions) {
+    //获取配置
     this.options = options
+    //警告函数
     this.warn = options.warn || baseWarn
+    //转换函数
     this.transforms = pluckModuleFunction(options.modules, 'transformCode')
+    //数据转换成函数  data transfrom fn
     this.dataGenFns = pluckModuleFunction(options.modules, 'genData')
+    //准则
     this.directives = extend(extend({}, baseDirectives), options.directives)
+    //是否是保留标签
     const isReservedTag = options.isReservedTag || no
+    //获取不确定性组件 
     this.maybeComponent = (el: ASTElement) => !isReservedTag(el.tag)
+    //唯一ID
     this.onceId = 0
+    //静态渲染函数队列
     this.staticRenderFns = []
   }
 }
@@ -37,11 +49,19 @@ export type CodegenResult = {
   staticRenderFns: Array<string>
 };
 
+
+
+
+//开始生成
+//传入虚拟节点
+//传入配置
 export function generate (
   ast: ASTElement | void,
   options: CompilerOptions
 ): CodegenResult {
+  //开始生成状态 传入配置
   const state = new CodegenState(options)
+  //传入虚拟函数和 状态 开始生成Element
   const code = ast ? genElement(ast, state) : '_c("div")'
   return {
     render: `with(this){return ${code}}`,
@@ -49,21 +69,30 @@ export function generate (
   }
 }
 
+
+//生成Element
 export function genElement (el: ASTElement, state: CodegenState): string {
   if (el.staticRoot && !el.staticProcessed) {
+    //是否是Root 并且没静态处理
     return genStatic(el, state)
   } else if (el.once && !el.onceProcessed) {
+    //once类型
     return genOnce(el, state)
   } else if (el.for && !el.forProcessed) {
+    //生成for
     return genFor(el, state)
   } else if (el.if && !el.ifProcessed) {
+    //生成IF
     return genIf(el, state)
   } else if (el.tag === 'template' && !el.slotTarget) {
+    //生成template
     return genChildren(el, state) || 'void 0'
   } else if (el.tag === 'slot') {
+    //生成slot
     return genSlot(el, state)
   } else {
     // component or element
+    //组件元素
     let code
     if (el.component) {
       code = genComponent(el.component, el, state)
@@ -480,3 +509,5 @@ function transformSpecialNewlines (text: string): string {
     .replace(/\u2028/g, '\\u2028')
     .replace(/\u2029/g, '\\u2029')
 }
+
+

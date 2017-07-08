@@ -7,10 +7,14 @@ import {
   baseWarn
 } from 'compiler/helpers'
 
+
+//转换元素class
 function transformNode (el: ASTElement, options: CompilerOptions) {
   const warn = options.warn || baseWarn
+  //获取提取到的元素
   const staticClass = getAndRemoveAttr(el, 'class')
   if (process.env.NODE_ENV !== 'production' && staticClass) {
+    //编译元素样式
     const expression = parseText(staticClass, options.delimiters)
     if (expression) {
       warn(
@@ -21,11 +25,14 @@ function transformNode (el: ASTElement, options: CompilerOptions) {
       )
     }
   }
+  //如果存在样式
   if (staticClass) {
     el.staticClass = JSON.stringify(staticClass)
   }
+  //建立元素绑定
   const classBinding = getBindingAttr(el, 'class', false /* getStatic */)
   if (classBinding) {
+    //设置对应标签
     el.classBinding = classBinding
   }
 }

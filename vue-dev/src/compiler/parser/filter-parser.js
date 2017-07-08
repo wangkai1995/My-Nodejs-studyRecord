@@ -3,16 +3,27 @@
 const validDivisionCharRE = /[\w).+\-_$\]]/
 
 export function parseFilters (exp: string): string {
+  //是否单数
   let inSingle = false
+  //是否双数
   let inDouble = false
+  //是否模板字符
   let inTemplateString = false
+  //是否正则
   let inRegex = false
+  //折起来的？
   let curly = 0
+  //平坦的？
   let square = 0
+  //括号？
   let paren = 0
+  //最后过滤的坐标
   let lastFilterIndex = 0
   let c, prev, i, expression, filters
+  
 
+  //开始遍历一些特殊表达式
+  //不能出现在文本中
   for (i = 0; i < exp.length; i++) {
     prev = c
     c = exp.charCodeAt(i)
@@ -63,13 +74,17 @@ export function parseFilters (exp: string): string {
       }
     }
   }
-
+  
+  //如果表达式不存在 则赋值过去
   if (expression === undefined) {
     expression = exp.slice(0, i).trim()
   } else if (lastFilterIndex !== 0) {
     pushFilter()
   }
-
+  
+  //下面这一段pushFilter可能是吧 表达式转成函数
+  //如果是存文本 则直接返回expression
+  //如果里面存在 函数表达式 则要提取处理
   function pushFilter () {
     (filters || (filters = [])).push(exp.slice(lastFilterIndex, i).trim())
     lastFilterIndex = i + 1
@@ -80,7 +95,8 @@ export function parseFilters (exp: string): string {
       expression = wrapFilter(expression, filters[i])
     }
   }
-
+  
+  //返回
   return expression
 }
 

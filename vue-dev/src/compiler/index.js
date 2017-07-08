@@ -20,8 +20,12 @@ export const createCompiler = createCompilerCreator(function baseCompile (
   //解析
   //传入模板字符串去除空格
   //传入配置
+  //获得ast 虚拟元素
   const ast = parse(template.trim(), options)
+  //性能处理
+  //加入缓存
   optimize(ast, options)
+  //开始生成
   const code = generate(ast, options)
   return {
     ast,

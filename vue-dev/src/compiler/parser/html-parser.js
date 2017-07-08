@@ -178,13 +178,14 @@ export function parseHTML (html, options) {
         }
       }
 
-
+      //初始化参数
       let text, rest, next
       //如果标签内容结束距离大于0
       //这里判断的是<xxxx>|.....|(<)/xx>
       //||中的内容
       if (textEnd >= 0) {
         //获取内容
+        //获取文本内容</xxx>这一段
         rest = html.slice(textEnd)
         /*
           这个while里面检测
@@ -208,19 +209,23 @@ export function parseHTML (html, options) {
         }
         //获取文本内容
         text = html.substring(0, textEnd)
-        //字符串推进到结束
+        //字符串推进到结束标签
         advance(textEnd)
       }
+      
 
       //判断是否结束了
       if (textEnd < 0) {
         text = html
         html = ''
       }
-      //配置字符串？并且text存在
+
+      //text存在 则开始编译标签内容
       if (options.chars && text) {
+        //开始编译
         options.chars(text)
       }
+
     } else {
       var stackedTag = lastTag.toLowerCase()
       var reStackedTag = reCache[stackedTag] || (reCache[stackedTag] = new RegExp('([\\s\\S]*?)(</' + stackedTag + '[^>]*>)', 'i'))
@@ -381,12 +386,14 @@ export function parseHTML (html, options) {
     let pos, lowerCasedTagName
     if (start == null) start = index
     if (end == null) end = index
-
+    
+    //转成小写
     if (tagName) {
       lowerCasedTagName = tagName.toLowerCase()
     }
-
+    
     // Find the closest opened tag of the same type
+    //找到最接近的打开相同类型的标签
     if (tagName) {
       for (pos = stack.length - 1; pos >= 0; pos--) {
         if (stack[pos].lowerCasedTag === lowerCasedTagName) {
@@ -395,13 +402,15 @@ export function parseHTML (html, options) {
       }
     } else {
       // If no tag name is provided, clean shop
+      //如果没找到提供标签
       pos = 0
     }
-
+    
     if (pos >= 0) {
       // Close all the open elements, up the stack
       for (let i = stack.length - 1; i >= pos; i--) {
         if (process.env.NODE_ENV !== 'production' &&
+          //如果没匹配到结束标签
           (i > pos || !tagName) &&
           options.warn
         ) {
@@ -409,7 +418,9 @@ export function parseHTML (html, options) {
             `tag <${stack[i].tag}> has no matching end tag.`
           )
         }
+        //开始结束标签
         if (options.end) {
+          //开始添加结束标签
           options.end(stack[i].tag, start, end)
         }
       }
@@ -417,10 +428,12 @@ export function parseHTML (html, options) {
       // Remove the open elements from the stack
       stack.length = pos
       lastTag = pos && stack[pos - 1].tag
+      //判断是否是</br>
     } else if (lowerCasedTagName === 'br') {
       if (options.start) {
         options.start(tagName, [], true, start, end)
       }
+      //判断是否是P标签
     } else if (lowerCasedTagName === 'p') {
       if (options.start) {
         options.start(tagName, [], false, start, end)
@@ -433,3 +446,7 @@ export function parseHTML (html, options) {
 
 
 }
+
+
+
+

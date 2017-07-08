@@ -8,12 +8,17 @@ import {
   baseWarn
 } from 'compiler/helpers'
 
+
+//转换样式
 function transformNode (el: ASTElement, options: CompilerOptions) {
   const warn = options.warn || baseWarn
+  //读取虚拟元素样式
   const staticStyle = getAndRemoveAttr(el, 'style')
+  //如果样式存在
   if (staticStyle) {
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production') {
+      //编译文本 传入样式名和分隔符
       const expression = parseText(staticStyle, options.delimiters)
       if (expression) {
         warn(
@@ -24,6 +29,7 @@ function transformNode (el: ASTElement, options: CompilerOptions) {
         )
       }
     }
+    //设置编译样式
     el.staticStyle = JSON.stringify(parseStyleText(staticStyle))
   }
 

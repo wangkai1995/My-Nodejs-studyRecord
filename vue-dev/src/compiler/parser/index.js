@@ -96,7 +96,8 @@ export function parse (
       warn(msg)
     }
   }
-
+  
+  //结束标签判断下是否是pre元素
   function endPre (element) {
     // check pre state
     if (element.pre) {
@@ -240,7 +241,10 @@ export function parse (
         processSlot(element)
         //处理component
         processComponent(element)
-
+        
+        //执行以下转变方法 style class 设置对应标记
+        //\src\platforms\web\compiler\modules\style.js:
+        //\src\platforms\web\compiler\modules\class.js:
         for (let i = 0; i < transforms.length; i++) {
           transforms[i](element, options)
         }
@@ -250,6 +254,8 @@ export function parse (
       }
 
       //检查检验根节点
+      //检查 根节点不能是带for
+      //或者 插槽solt template
       function checkRootConstraints (el) {
         //非生产环境
         if (process.env.NODE_ENV !== 'production') {
@@ -297,6 +303,7 @@ export function parse (
           )
         }
       }
+      
 
       //如果当前父节点存在 并且element没被禁止
       if (currentParent && !element.forbidden) {
@@ -334,19 +341,26 @@ export function parse (
         postTransforms[i](element, options)
       }
     },
+
     //结束函数
+    //标签结束
     end () {
       // remove trailing whitespace
+      // 删除尾随空格
+      // 这个尾随空格在parseText解析表达式的时候添加
       const element = stack[stack.length - 1]
       const lastNode = element.children[element.children.length - 1]
       if (lastNode && lastNode.type === 3 && lastNode.text === ' ' && !inPre) {
         element.children.pop()
       }
       // pop stack
+      // 出stack
       stack.length -= 1
       currentParent = stack[stack.length - 1]
+      //结束标签判断下是否是pre
       endPre(element)
     },
+
     //处理文本函数
     chars (text: string) {
       //如果当前父节点不存在
@@ -379,20 +393,29 @@ export function parse (
       // inPre 是否是spirct style
       // text修正
       text = inPre || text.trim()
+      //isTextTag判断标签是否spirct style
+      //编译HTML缓存
         ? isTextTag(currentParent) ? text : decodeHTMLCached(text)
         // only preserve whitespace if its not right after a starting tag
         : preserveWhitespace && children.length ? ' ' : ''
+
+
       //如果文本正确并且存在
       if (text) {
         let expression
         //非pre保护 并且节点不为空字符串 提取表达式成功
+        //parseText 提取表达式
         if (!inVPre && text !== ' ' && (expression = parseText(text, delimiters))) {
+          //提取表达式结束 expression为表达式
+          //简单数据_s(xxx)包装
+          //复杂数据_f("${name}")(${exp},${args}包装
           children.push({
             type: 2,
             expression,
             text
           })
         } else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') {
+          //如果为空
           children.push({
             type: 3,
             text
@@ -403,6 +426,7 @@ export function parse (
   })
   return root
 }
+
 
 
 
