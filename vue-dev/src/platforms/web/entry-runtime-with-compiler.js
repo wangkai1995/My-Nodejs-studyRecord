@@ -16,12 +16,13 @@ const idToTemplate = cached(id => {
 
 const mount = Vue.prototype.$mount
 
+
+
 //原型方法挂载
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
-
 
   //获取元素
   el = el && query(el)
@@ -68,6 +69,9 @@ Vue.prototype.$mount = function (
       //从el outerHtml获取元素模板
       template = getOuterHTML(el)
     }
+
+
+    //如果模板存在
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -83,7 +87,8 @@ Vue.prototype.$mount = function (
         //分隔符
         delimiters: options.delimiters
       }, this)
-      //
+      
+
       options.render = render
       options.staticRenderFns = staticRenderFns
 
@@ -94,6 +99,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  //返回递归执行挂载函数
   return mount.call(this, el, hydrating)
 }
 

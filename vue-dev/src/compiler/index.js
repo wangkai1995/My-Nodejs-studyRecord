@@ -25,11 +25,21 @@ export const createCompiler = createCompilerCreator(function baseCompile (
   //性能处理
   //加入缓存
   optimize(ast, options)
-  //开始生成
-  const code = generate(ast, options)
+  //开始生成code 
+  /*
+    state = new CodegenState(options)
+    code={
+      render: `with(this){return "_c('div',{attrs:{"id":"app"}}),[_v("\n "+_s(message)+"\n ")]" }`,
+      staticRenderFns: state.staticRenderFns
+    }
+  */
+  const code = gnerate(ast, options)
   return {
     ast,
     render: code.render,
     staticRenderFns: code.staticRenderFns
   }
 })
+
+
+

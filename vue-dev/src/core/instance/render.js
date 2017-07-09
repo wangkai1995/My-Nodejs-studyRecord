@@ -142,6 +142,10 @@ export function renderMixin (Vue: Class<Component>) {
   // internal render helpers.
   // these are exposed on the instance prototype to reduce generated render
   // code size.
+    
+
+  //这下面的方法 都应用于 转换生成的虚拟节点data和节点编译生成的函数
+  
 
   //原型方法标记 标记节点为静态单次节点
   Vue.prototype._o = markOnce

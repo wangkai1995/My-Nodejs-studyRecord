@@ -70,6 +70,7 @@ export function generate (
 }
 
 
+
 //生成Element
 export function genElement (el: ASTElement, state: CodegenState): string {
   if (el.staticRoot && !el.staticProcessed) {
@@ -97,22 +98,34 @@ export function genElement (el: ASTElement, state: CodegenState): string {
     if (el.component) {
       code = genComponent(el.component, el, state)
     } else {
+      //不是组件元素
+      //生成data
       const data = el.plain ? undefined : genData(el, state)
-
+      //生成子元素
       const children = el.inlineTemplate ? null : genChildren(el, state, true)
+      //children 经过转换可能得到的 列子 [_v("\n "+_s(message)+"\n ")]
       code = `_c('${el.tag}'${
         data ? `,${data}` : '' // data
       }${
         children ? `,${children}` : '' // children
       })`
+      //组装在一起 获取code 
+      //code 例子如下
+      /*
+        code =  _c('div',{attrs:{"id":"app"}}),[_v("\n "+_s(message)+"\n ")]
+      */
     }
     // module transforms
     for (let i = 0; i < state.transforms.length; i++) {
+      //转换el,code
       code = state.transforms[i](el, code)
     }
     return code
   }
 }
+
+
+
 
 // hoist static sub-trees out
 function genStatic (el: ASTElement, state: CodegenState): string {
@@ -120,6 +133,8 @@ function genStatic (el: ASTElement, state: CodegenState): string {
   state.staticRenderFns.push(`with(this){return ${genElement(el, state)}}`)
   return `_m(${state.staticRenderFns.length - 1}${el.staticInFor ? ',true' : ''})`
 }
+
+
 
 // v-once
 function genOnce (el: ASTElement, state: CodegenState): string {
@@ -148,6 +163,8 @@ function genOnce (el: ASTElement, state: CodegenState): string {
   }
 }
 
+
+
 export function genIf (
   el: any,
   state: CodegenState,
@@ -157,6 +174,8 @@ export function genIf (
   el.ifProcessed = true // avoid recursion
   return genIfConditions(el.ifConditions.slice(), state, altGen, altEmpty)
 }
+
+
 
 function genIfConditions (
   conditions: ASTIfConditions,
@@ -188,6 +207,8 @@ function genIfConditions (
         : genElement(el, state)
   }
 }
+
+
 
 export function genFor (
   el: any,
@@ -221,14 +242,21 @@ export function genFor (
     '})'
 }
 
+
+
+
+//生成data数据
 export function genData (el: ASTElement, state: CodegenState): string {
   let data = '{'
-
-  // directives first.
+  
+  // directives first. 第一条指令
+  //  可能生成变异的指令
   // directives may mutate the el's other properties before they are generated.
+  //传入生成指令
   const dirs = genDirectives(el, state)
   if (dirs) data += dirs + ','
 
+  //检查是否存在对应的设置
   // key
   if (el.key) {
     data += `key:${el.key},`
@@ -248,33 +276,57 @@ export function genData (el: ASTElement, state: CodegenState): string {
   if (el.component) {
     data += `tag:"${el.tag}",`
   }
+
+
+  // 模块数据生成函数
   // module data generation functions
   for (let i = 0; i < state.dataGenFns.length; i++) {
+    //这里是 state中的
+    /*
+        //转换函数
+        this.transforms = pluckModuleFunction(options.modules, 'transformCode')
+        //数据转换成函数  data transfrom fn
+        this.dataGenFns = pluckModuleFunction(options.modules, 'genData')
+    */
     data += state.dataGenFns[i](el)
   }
-  // attributes
+
+  
+  // 如果属性存在 那么生成
+  // attributes or props
+  // 列如 attrs:{'id':'app'} 等JSON字符串
   if (el.attrs) {
     data += `attrs:{${genProps(el.attrs)}},`
   }
+
+
   // DOM props
+  // 如果 props存在 同上attributes处理
   if (el.props) {
     data += `domProps:{${genProps(el.props)}},`
   }
+
+  // 一系列事件处理 
+  // 这后面的稍后再看
   // event handlers
   if (el.events) {
     data += `${genHandlers(el.events, false, state.warn)},`
   }
+
   if (el.nativeEvents) {
     data += `${genHandlers(el.nativeEvents, true, state.warn)},`
   }
+
   // slot target
   if (el.slotTarget) {
     data += `slot:${el.slotTarget},`
   }
+
   // scoped slots
   if (el.scopedSlots) {
     data += `${genScopedSlots(el.scopedSlots, state)},`
   }
+
   // component v-model
   if (el.model) {
     data += `model:{value:${
@@ -285,6 +337,7 @@ export function genData (el: ASTElement, state: CodegenState): string {
       el.model.expression
     }},`
   }
+
   // inline-template
   if (el.inlineTemplate) {
     const inlineTemplate = genInlineTemplate(el, state)
@@ -292,7 +345,11 @@ export function genData (el: ASTElement, state: CodegenState): string {
       data += `${inlineTemplate},`
     }
   }
+  
+  //去除尾部,加上}
+  //生成出来 列如 最简单的 {attrs:{'id':'app'}}
   data = data.replace(/,$/, '') + '}'
+  // V-bind 包括处理
   // v-bind data wrap
   if (el.wrapData) {
     data = el.wrapData(data)
@@ -300,8 +357,12 @@ export function genData (el: ASTElement, state: CodegenState): string {
   return data
 }
 
+
+
+//生成指令
 function genDirectives (el: ASTElement, state: CodegenState): string | void {
   const dirs = el.directives
+  //如果el不存在directives 那么直接退出
   if (!dirs) return
   let res = 'directives:['
   let hasRuntime = false
@@ -331,6 +392,8 @@ function genDirectives (el: ASTElement, state: CodegenState): string | void {
   }
 }
 
+
+
 function genInlineTemplate (el: ASTElement, state: CodegenState): ?string {
   const ast = el.children[0]
   if (process.env.NODE_ENV !== 'production' && (
@@ -348,6 +411,8 @@ function genInlineTemplate (el: ASTElement, state: CodegenState): ?string {
   }
 }
 
+
+
 function genScopedSlots (
   slots: { [key: string]: ASTElement },
   state: CodegenState
@@ -358,6 +423,8 @@ function genScopedSlots (
     }).join(',')
   }])`
 }
+
+
 
 function genScopedSlot (
   key: string,
@@ -373,6 +440,8 @@ function genScopedSlot (
       : genElement(el, state)
   }}}`
 }
+
+
 
 function genForScopedSlot (
   key: string,
@@ -390,6 +459,12 @@ function genForScopedSlot (
     '})'
 }
 
+
+//生成子元素
+// el = 虚拟元素
+// state = 生成状态
+// checkSkip = 检查跳过
+// 后面的2个函数 暂时不清楚
 export function genChildren (
   el: ASTElement,
   state: CodegenState,
@@ -397,9 +472,14 @@ export function genChildren (
   altGenElement?: Function,
   altGenNode?: Function
 ): string | void {
+  //获取子元素列表
   const children = el.children
   if (children.length) {
+    //拿到第一个
     const el: any = children[0]
+    
+
+    // el单个for属性 特别优化
     // optimize single v-for
     if (children.length === 1 &&
       el.for &&
@@ -408,15 +488,21 @@ export function genChildren (
     ) {
       return (altGenElement || genElement)(el, state)
     }
+    
+    //是否检查节点
     const normalizationType = checkSkip
       ? getNormalizationType(children, state.maybeComponent)
       : 0
+    // 生成节点
+    // 执行gen函数
+    // genNode 是个递归处理的函数 根据节点type 判断是递归genElement 还是genText 
     const gen = altGenNode || genNode
     return `[${children.map(c => gen(c, state)).join(',')}]${
       normalizationType ? `,${normalizationType}` : ''
     }`
   }
 }
+
 
 // determine the normalization needed for the children array.
 // 0: no normalization needed
@@ -445,10 +531,15 @@ function getNormalizationType (
   return res
 }
 
+
+
 function needsNormalization (el: ASTElement): boolean {
   return el.for !== undefined || el.tag === 'template' || el.tag === 'slot'
 }
 
+
+
+//根据节点类型判断生成 element 还是text
 function genNode (node: ASTNode, state: CodegenState): string {
   if (node.type === 1) {
     return genElement(node, state)
@@ -457,12 +548,22 @@ function genNode (node: ASTNode, state: CodegenState): string {
   }
 }
 
+
+
+//生成text
 export function genText (text: ASTText | ASTExpression): string {
+  // 如果节点属性是type 简单表达式 则直接返回
+  // expression 在parseText 中parseFilter 里面得到
+  // 复杂表达式 transformSpecialNewlines 做换行转换处理
   return `_v(${text.type === 2
     ? text.expression // no need for () because already wrapped in _s()
     : transformSpecialNewlines(JSON.stringify(text.text))
   })`
 }
+
+
+
+
 
 function genSlot (el: ASTElement, state: CodegenState): string {
   const slotName = el.slotName || '"default"'
@@ -482,6 +583,7 @@ function genSlot (el: ASTElement, state: CodegenState): string {
   return res + ')'
 }
 
+
 // componentName is el.component, take it as argument to shun flow's pessimistic refinement
 function genComponent (
   componentName: string,
@@ -494,15 +596,22 @@ function genComponent (
   })`
 }
 
+
+
+//生成属性
 function genProps (props: Array<{ name: string, value: string }>): string {
   let res = ''
   for (let i = 0; i < props.length; i++) {
+    //获取props attribute对象
     const prop = props[i]
+    //转换编译成字符串 比如 "id":"app"
     res += `"${prop.name}":${transformSpecialNewlines(prop.value)},`
   }
   return res.slice(0, -1)
 }
 
+
+//转换特殊换行
 // #3895, #4268
 function transformSpecialNewlines (text: string): string {
   return text

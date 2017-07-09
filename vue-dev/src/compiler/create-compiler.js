@@ -16,7 +16,8 @@ export function createCompilerCreator (baseCompile: Function): Function {
       finalOptions.warn = (msg, tip) => {
         (tip ? tips : errors).push(msg)
       }
-
+      
+      //如果配置存在
       if (options) {
         // merge custom modules
         if (options.modules) {
@@ -37,11 +38,15 @@ export function createCompilerCreator (baseCompile: Function): Function {
           }
         }
       }
-
+      
+      //生成编译
       const compiled = baseCompile(template, finalOptions)
+      //错误检测 AST元素
+      //编译出来的表达式 需要执行 try new Function(render) 检查错误
       if (process.env.NODE_ENV !== 'production') {
         errors.push.apply(errors, detectErrors(compiled.ast))
       }
+      //复制错误
       compiled.errors = errors
       compiled.tips = tips
       return compiled
