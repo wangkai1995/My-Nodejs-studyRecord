@@ -77,7 +77,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
   //保持标志？？ hydrating？
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
-    //如果存在准备更新生命周期
+    //如果节点已经挂载
     //那么调用钩子函数
     if (vm._isMounted) {
       callHook(vm, 'beforeUpdate')
@@ -206,18 +206,20 @@ export function lifecycleMixin (Vue: Class<Component>) {
 
 
 
-
-
+//挂载组件方法
 export function mountComponent (
   vm: Component,
   el: ?Element,
   hydrating?: boolean
 ): Component {
   vm.$el = el
+  //如果渲染方法不存在
   if (!vm.$options.render) {
+    //渲染方法赋值为空的虚拟节点对象
     vm.$options.render = createEmptyVNode
     if (process.env.NODE_ENV !== 'production') {
       /* istanbul ignore if */
+      //如果模板存在 第一个字符是#或者 EL存在 那么报错
       if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||
         vm.$options.el || el) {
         warn(
@@ -234,12 +236,15 @@ export function mountComponent (
       }
     }
   }
+
+  //执行即将挂载回调
   callHook(vm, 'beforeMount')
 
   let updateComponent
   /* istanbul ignore if */
   if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
     updateComponent = () => {
+      //开发环境 挂载的一些LOG
       const name = vm._name
       const id = vm._uid
       const startTag = `vue-perf-start:${id}`
@@ -256,11 +261,14 @@ export function mountComponent (
       measure(`${name} patch`, startTag, endTag)
     }
   } else {
+    //生产环境
     updateComponent = () => {
       vm._update(vm._render(), hydrating)
     }
   }
 
+
+  //初始化观察者对象
   vm._watcher = new Watcher(vm, updateComponent, noop)
   hydrating = false
 
@@ -272,6 +280,9 @@ export function mountComponent (
   }
   return vm
 }
+
+
+
 
 export function updateChildComponent (
   vm: Component,
@@ -328,12 +339,16 @@ export function updateChildComponent (
   }
 }
 
+
+
 function isInInactiveTree (vm) {
   while (vm && (vm = vm.$parent)) {
     if (vm._inactive) return true
   }
   return false
 }
+
+
 
 export function activateChildComponent (vm: Component, direct?: boolean) {
   if (direct) {
@@ -352,6 +367,8 @@ export function activateChildComponent (vm: Component, direct?: boolean) {
     callHook(vm, 'activated')
   }
 }
+
+
 
 export function deactivateChildComponent (vm: Component, direct?: boolean) {
   if (direct) {
@@ -393,3 +410,5 @@ export function callHook (vm: Component, hook: string) {
     vm.$emit('hook:' + hook)
   }
 }
+
+

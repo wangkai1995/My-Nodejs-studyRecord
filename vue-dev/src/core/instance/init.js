@@ -177,35 +177,38 @@ function initInternalComponent (vm: Component, options: InternalComponentOptions
 
 
 // 接收构造参数
-// 获取父级构造参数
+// 获取构造参数
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   // 获得构造组件？
   let options = Ctor.options
-  // 如果有父级
+  // 如果存在特别的配置
   if (Ctor.super) {
-    // 获取父级的options
+    // 获取特别的options
     const superOptions = resolveConstructorOptions(Ctor.super)
-    // 获取父级缓存的options
+    // 获取缓存特别的options
     const cachedSuperOptions = Ctor.superOptions
-    // 如果父级options有变化
+    // 如果特别的options有变化
     if (superOptions !== cachedSuperOptions) {
       // 更新缓存
       // super option changed,
       // need to resolve new options.
       Ctor.superOptions = superOptions
       // check if there are any late-modified/attached options (#4976)
+      //接收改进的配置
       const modifiedOptions = resolveModifiedOptions(Ctor)
       // update base extend options
+      //更新配置
       if (modifiedOptions) {
         extend(Ctor.extendOptions, modifiedOptions)
       }
+      //再次混合
       options = Ctor.options = mergeOptions(superOptions, Ctor.extendOptions)
       if (options.name) {
         options.components[options.name] = Ctor
       }
     }
   }
-  //获取父级构造参数
+  //获取构造参数
   return options
 }
 

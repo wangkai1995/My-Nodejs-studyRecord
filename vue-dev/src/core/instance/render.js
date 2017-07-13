@@ -72,6 +72,8 @@ export function renderMixin (Vue: Class<Component>) {
       staticRenderFns,
       _parentVnode
     } = vm.$options
+
+
     // 是否挂载
     if (vm._isMounted) {
       // clone slot nodes on re-renders
@@ -83,9 +85,10 @@ export function renderMixin (Vue: Class<Component>) {
 
     //从父节点获得slot作用域
     vm.$scopedSlots = (_parentVnode && _parentVnode.data.scopedSlots) || emptyObject
+
     //如果静态渲染方法存在 并且静态树不存在
-    //这里可能是服务端渲染的步奏
     if (staticRenderFns && !vm._staticTrees) {
+      //初始化静态树
       vm._staticTrees = []
     }
 
@@ -98,6 +101,19 @@ export function renderMixin (Vue: Class<Component>) {
     let vnode
     try {
       //渲染执行, 获得虚拟节点
+      //执行render
+      /*
+        vm._renderProxy 为之前挂载的DATA Proxy代理
+        vm.$createElement 创建虚拟节点方法
+        例子
+        render = `with(this){return "_c('div',{attrs:{"id":"app"}}),[_v("\n "+_s(message)+"\n ")]" }`,
+        //这里的 message _v _s _c 都是this = vue对象下的属性
+        //通过with执行也必须要设置Proxy在读取前进行拦截,保证读取的属性是存在的
+        //读取message 时候 触发observer 的 get 去添加watcher
+        1： _s(message)  toString
+        2： _c('div',{attrs:{"id":"app"}}) 创建虚拟节点
+        3   _v("\n "+_s(message)+"\n ") 创建虚拟文本节点
+      */
       vnode = render.call(vm._renderProxy, vm.$createElement)
     } catch (e) {
       //如果出错处理错误

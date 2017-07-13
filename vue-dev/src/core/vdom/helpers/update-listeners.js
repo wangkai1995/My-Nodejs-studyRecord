@@ -39,6 +39,7 @@ export function createFnInvoker (fns: Function | Array<Function>): Function {
   return invoker
 }
 
+
 export function updateListeners (
   on: Object,
   oldOn: Object,

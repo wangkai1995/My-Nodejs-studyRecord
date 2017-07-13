@@ -1,5 +1,7 @@
 /* @flow */
 
+
+// 虚拟节点构造类
 export default class VNode {
   tag: string | void;
   data: VNodeData | void;
@@ -24,38 +26,58 @@ export default class VNode {
   isAsyncPlaceholder: boolean;
   ssrContext: ?Object;
 
-
-
   constructor (
-    tag?: string,
-    data?: VNodeData,
-    children?: ?Array<VNode>,
-    text?: string,
-    elm?: Node,
-    context?: Component,
-    componentOptions?: VNodeComponentOptions,
-    asyncFactory?: Function
+    tag?: string,         //传入标签名
+    data?: VNodeData,     //传入虚拟节点数据
+    children?: ?Array<VNode>,  //子元素数组
+    text?: string,        //文本
+    elm?: Node,           //虚拟节点
+    context?: Component,  //上下文
+    componentOptions?: VNodeComponentOptions,    //虚拟节点配置
+    asyncFactory?: Function   //异步构造函数
   ) {
+    //初始化一系列属性标签
+    //标签名
     this.tag = tag
+    //attribute
     this.data = data
+    //子元素
     this.children = children
+    //纯文本
     this.text = text
+    //真实节点
     this.elm = elm
+    //这个不清除
     this.ns = undefined
+    //上下文
     this.context = context
+    //上下文函数
     this.functionalContext = undefined
+    //唯一标示key
     this.key = data && data.key
+    //组件配置
     this.componentOptions = componentOptions
+    //组件实例
     this.componentInstance = undefined
+    //父节点
     this.parent = undefined
+    //未处理表示
     this.raw = false
+    //是否静态
     this.isStatic = false
+    //是否根节点插入
     this.isRootInsert = true
+    //是否注释
     this.isComment = false
+    //是否复制
     this.isCloned = false
+    //是否是单次
     this.isOnce = false
+    //异步生产
     this.asyncFactory = asyncFactory
+    //异步变化
     this.asyncMeta = undefined
+    //是否异步占位符
     this.isAsyncPlaceholder = false
   }
 
@@ -66,6 +88,8 @@ export default class VNode {
   }
 }
 
+
+
 export const createEmptyVNode = () => {
   const node = new VNode()
   node.text = ''
@@ -73,10 +97,14 @@ export const createEmptyVNode = () => {
   return node
 }
 
+
+//创建虚拟文本节点
 export function createTextVNode (val: string | number) {
   return new VNode(undefined, undefined, undefined, String(val))
 }
 
+
+//复制虚拟节点
 // optimized shallow clone
 // used for static nodes and slot nodes because they may be reused across
 // multiple renders, cloning them avoids errors when DOM manipulations rely
@@ -99,6 +127,8 @@ export function cloneVNode (vnode: VNode): VNode {
   return cloned
 }
 
+
+//复制虚拟节点数组
 export function cloneVNodes (vnodes: Array<VNode>): Array<VNode> {
   const len = vnodes.length
   const res = new Array(len)

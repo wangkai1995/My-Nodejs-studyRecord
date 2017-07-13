@@ -41,13 +41,19 @@ if (process.env.NODE_ENV !== 'production') {
     })
   }
 
+  //调用这里时候
   const hasHandler = {
     has (target, key) {
+      // target = vue
+      // key 传入的target属性
+      // 这里的key 是渲染时传入的vue原型方法缩写方法 \src\core\instance\state.js中
       const has = key in target
       const isAllowed = allowedGlobals(key) || key.charAt(0) === '_'
+      //如果存在 并且 是允许执行  不是则报错
       if (!has && !isAllowed) {
         warnNonPresent(target, key)
       }
+      //返回 boolen
       return has || !isAllowed
     }
   }
@@ -71,9 +77,11 @@ if (process.env.NODE_ENV !== 'production') {
     if (hasProxy) {
       // determine which proxy handler to use
       const options = vm.$options
+      //如果 vm.options.render 已经存在 则getHandler 不然则hasHandler
       const handlers = options.render && options.render._withStripped
         ? getHandler
         : hasHandler
+      //代理自己
       vm._renderProxy = new Proxy(vm, handlers)
     } else {
       vm._renderProxy = vm

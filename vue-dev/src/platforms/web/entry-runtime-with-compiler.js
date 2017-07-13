@@ -14,10 +14,13 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+
+//这个是最开始的Vue.prototype.$mount
+//路径\src\platforms\weex\runtime\index.js
 const mount = Vue.prototype.$mount
 
 
-
+//执行到这里  Vue.prototype.$mount被重新替换了
 //原型方法挂载
 Vue.prototype.$mount = function (
   el?: string | Element,
@@ -88,7 +91,8 @@ Vue.prototype.$mount = function (
         delimiters: options.delimiters
       }, this)
       
-
+      
+      //这里的options 是vm.$option
       options.render = render
       options.staticRenderFns = staticRenderFns
 
@@ -102,6 +106,8 @@ Vue.prototype.$mount = function (
   //返回递归执行挂载函数
   return mount.call(this, el, hydrating)
 }
+
+
 
 
 
@@ -128,4 +134,6 @@ function getOuterHTML (el: Element): string {
 Vue.compile = compileToFunctions
 
 export default Vue
+
+
 

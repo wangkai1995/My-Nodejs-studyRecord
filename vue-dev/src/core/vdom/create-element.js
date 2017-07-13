@@ -26,6 +26,9 @@ const ALWAYS_NORMALIZE = 2
 /***
   
 ***/
+
+
+//构造虚拟节点
 export function createElement (
   context: Component,
   tag: any,
@@ -34,11 +37,13 @@ export function createElement (
   normalizationType: any,
   alwaysNormalize: boolean
 ): VNode {
+  //如果data是数组或者简单的数据
   if (Array.isArray(data) || isPrimitive(data)) {
     normalizationType = children
     children = data
     data = undefined
   }
+  //是否总是标准化
   if (isTrue(alwaysNormalize)) {
     normalizationType = ALWAYS_NORMALIZE
   }
@@ -55,6 +60,7 @@ export function _createElement (
   children?: any,
   normalizationType?: number
 ): VNode {
+  //如果data未定义
   if (isDef(data) && isDef((data: any).__ob__)) {
     process.env.NODE_ENV !== 'production' && warn(
       `Avoid using observed data object as vnode data: ${JSON.stringify(data)}\n` +
@@ -63,11 +69,16 @@ export function _createElement (
     )
     return createEmptyVNode()
   }
+  //如果标签名不存在
   if (!tag) {
     // in case of component :is set to falsy value
     return createEmptyVNode()
   }
+  //以上都会返回创建一个空的虚拟元素
+
+
   // warn against non-primitive key
+  // 如果都不存在 则报错
   if (process.env.NODE_ENV !== 'production' &&
     isDef(data) && isDef(data.key) && !isPrimitive(data.key)
   ) {
@@ -77,33 +88,45 @@ export function _createElement (
       context
     )
   }
+
+  // 帮助处理 子节点函数 和 插槽作用域
   // support single function children as default scoped slot
+  // 如果子节点是数组 并且是函数
   if (Array.isArray(children) &&
     typeof children[0] === 'function'
   ) {
     data = data || {}
+    //处理插槽作用域
     data.scopedSlots = { default: children[0] }
     children.length = 0
   }
+  //如果总是标准化构建
   if (normalizationType === ALWAYS_NORMALIZE) {
     children = normalizeChildren(children)
+    //如果是简单构建
   } else if (normalizationType === SIMPLE_NORMALIZE) {
     children = simpleNormalizeChildren(children)
   }
+
+  //开始构建
   let vnode, ns
   if (typeof tag === 'string') {
     let Ctor
     ns = config.getTagNamespace(tag)
+    //如果是可以构建的标签标签
     if (config.isReservedTag(tag)) {
       // platform built-in elements
+      // 建立虚拟节点
       vnode = new VNode(
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context
       )
     } else if (isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
+      // 虚拟组件
       // component
       vnode = createComponent(Ctor, data, context, children, tag)
     } else {
+      // 未知元素
       // unknown or unlisted namespaced elements
       // check at runtime because it may get assigned a namespace when its
       // parent normalizes children
@@ -123,6 +146,7 @@ export function _createElement (
     return createEmptyVNode()
   }
 }
+
 
 
 

@@ -30,8 +30,11 @@ Vue.config.isUnknownElement = isUnknownElement
 extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
+
+//渲染到真实DOM的方法 
 // install platform patch function
 Vue.prototype.__patch__ = inBrowser ? patch : noop
+
 
 // public mount method
 Vue.prototype.$mount = function (
@@ -41,6 +44,8 @@ Vue.prototype.$mount = function (
   el = el && inBrowser ? query(el) : undefined
   return mountComponent(this, el, hydrating)
 }
+
+
 
 // devtools global hook
 /* istanbul ignore next */
@@ -68,3 +73,4 @@ setTimeout(() => {
 }, 0)
 
 export default Vue
+

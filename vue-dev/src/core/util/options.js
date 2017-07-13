@@ -43,6 +43,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
+
 //递归的合并2个数据
 /**
  * Helper that recursively merges two data objects together.
@@ -328,7 +329,7 @@ function normalizeDirectives (options: Object) {
 
 //混合options
 // parent为VUE组件  不存在父组件 则传入VUE构造函数
-// child未VUE组件
+// child为VUE组件
 /**
  * Merge two option objects into a new one.
  * Core utility used in both instantiation and inheritance.
@@ -343,10 +344,12 @@ export function mergeOptions (
     checkComponents(child)
   }
 
-  //如果自组件是函 则获取option
+  //如果自组件是函数 则获取option
   if (typeof child === 'function') {
     child = child.options
   }
+
+
   //格式化属性
   normalizeProps(child)
   //格式化指令

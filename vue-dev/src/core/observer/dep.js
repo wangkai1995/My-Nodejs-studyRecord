@@ -47,9 +47,11 @@ export default class Dep {
     //如果目标存在
     if (Dep.target) {
       //添加自己
+      //此时target = watcher 对象将自己添加过去
       Dep.target.addDep(this)
     }
   }
+
 
   //通知
   notify () {
