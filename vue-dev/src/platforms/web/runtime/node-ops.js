@@ -57,3 +57,5 @@ export function setTextContent (node: Node, text: string) {
 export function setAttribute (node: Element, key: string, val: string) {
   node.setAttribute(key, val)
 }
+
+

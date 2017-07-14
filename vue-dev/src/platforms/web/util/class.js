@@ -20,6 +20,9 @@ export function genClassForVnode (vnode: VNode): string {
   return renderClass(data.staticClass, data.class)
 }
 
+
+
+
 function mergeClassData (child: VNodeData, parent: VNodeData): {
   staticClass: string,
   class: any

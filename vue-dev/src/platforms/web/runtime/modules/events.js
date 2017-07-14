@@ -56,6 +56,7 @@ function add (
   )
 }
 
+
 function remove (
   event: string,
   handler: Function,
@@ -65,7 +66,9 @@ function remove (
   (_target || target).removeEventListener(event, handler, capture)
 }
 
+
 function updateDOMListeners (oldVnode: VNodeWithData, vnode: VNodeWithData) {
+  //不存在则退出
   if (isUndef(oldVnode.data.on) && isUndef(vnode.data.on)) {
     return
   }
@@ -75,6 +78,7 @@ function updateDOMListeners (oldVnode: VNodeWithData, vnode: VNodeWithData) {
   normalizeEvents(on)
   updateListeners(on, oldOn, add, remove, vnode.context)
 }
+
 
 export default {
   create: updateDOMListeners,

@@ -81,7 +81,7 @@ export function createPatchFunction (backend) {
   let i, j
   const cbs = {}
 
-  //获取到 真实DOM节点操作方法 nodeOps
+  //获取到 真实DOM节点操作方法 nodeOps web/runtime/node-ops
   //获取到directives and ref 模块
   const { modules, nodeOps } = backend
 
@@ -326,9 +326,16 @@ export function createPatchFunction (backend) {
 
   //创建元素的钩子函数
   function invokeCreateHooks (vnode, insertedVnodeQueue) {
+
+    // cbs 在初始化的时候赋值 值为
+    // hooks = ['create', 'activate', 'update', 'remove', 'destroy']
+    // 执行函数路径是\src\platforms\web\runtime\modules
+    // modules分别是 attribute class dom-props events index style transition 各自包含hooks
     for (let i = 0; i < cbs.create.length; ++i) {
+      //这里执行的是hooks.create 属于modules.attribute
       cbs.create[i](emptyNode, vnode)
     }
+
     i = vnode.data.hook // Reuse variable
     if (isDef(i)) {
       if (isDef(i.create)) i.create(emptyNode, vnode)
@@ -749,7 +756,7 @@ export function createPatchFunction (backend) {
         // replacing existing element
         // 获取旧元素的真实元素
         const oldElm = oldVnode.elm
-        //获取 到真实元素的副节点
+        //获取 到真实元素的父节点
         const parentElm = nodeOps.parentNode(oldElm)
         createElm(
           vnode,
@@ -760,33 +767,40 @@ export function createPatchFunction (backend) {
           oldElm._leaveCb ? null : parentElm,
           nodeOps.nextSibling(oldElm)   //获取真实节点的下一个节点
         )
-
+        //如果父节点存在
         if (isDef(vnode.parent)) {
           // component root element replaced.
           // update parent placeholder node element, recursively
           let ancestor = vnode.parent
+          //找到根元素
           while (ancestor) {
             ancestor.elm = vnode.elm
             ancestor = ancestor.parent
           }
+          //如果需要修补
           if (isPatchable(vnode)) {
             for (let i = 0; i < cbs.create.length; ++i) {
               cbs.create[i](emptyNode, vnode.parent)
             }
           }
         }
-
+        //如果父节点存在
         if (isDef(parentElm)) {
+          //卸载老虚拟节点
           removeVnodes(parentElm, [oldVnode], 0, 0)
         } else if (isDef(oldVnode.tag)) {
+          //卸载老节点真实DOM
           invokeDestroyHook(oldVnode)
         }
       }
     }
-
+    //执行插入
     invokeInsertHook(vnode, insertedVnodeQueue, isInitialPatch)
     return vnode.elm
   }
 }
+
+
+
 
 

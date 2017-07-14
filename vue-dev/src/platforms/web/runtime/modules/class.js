@@ -11,10 +11,14 @@ import {
   genClassForVnode
 } from 'web/util/index'
 
+
+//更新class
 function updateClass (oldVnode: any, vnode: any) {
   const el = vnode.elm
   const data: VNodeData = vnode.data
   const oldData: VNodeData = oldVnode.data
+  
+  //如果新老节点都不存在 则直接返回
   if (
     isUndef(data.staticClass) &&
     isUndef(data.class) && (
@@ -41,6 +45,8 @@ function updateClass (oldVnode: any, vnode: any) {
     el._prevClass = cls
   }
 }
+
+
 
 export default {
   create: updateClass,
