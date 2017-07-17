@@ -113,7 +113,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
       // 更新DOM
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
-    // 全局激活实例 切换到上一个激活
+    // 全局激活实例 切换到当前激活
     activeInstance = prevActiveInstance
     // update __vue__ reference
     // 更新_vue_引用

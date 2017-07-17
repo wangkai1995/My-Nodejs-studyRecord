@@ -31,7 +31,9 @@ const sharedPropertyDefinition = {
 }
 
 
-
+// vue._data属性添加代理方法
+// 这个方法把data中的属性挂载到vm的属性中
+// 所以 app.message = new Vue 传进去的data.message
 export function proxy (target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
@@ -41,6 +43,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
+
 
 
 

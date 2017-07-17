@@ -20,6 +20,8 @@ let waiting = false
 let flushing = false
 let index = 0
 
+
+
 /**
  * Reset the scheduler's state.
  */
@@ -31,6 +33,8 @@ function resetSchedulerState () {
   }
   waiting = flushing = false
 }
+
+
 
 /**
  * Flush both queues and run the watchers.
@@ -90,6 +94,9 @@ function flushSchedulerQueue () {
   }
 }
 
+
+
+
 function callUpdatedHooks (queue) {
   let i = queue.length
   while (i--) {
@@ -119,15 +126,20 @@ function callActivatedHooks (queue) {
   }
 }
 
+
+
+
 /**
  * Push a watcher into the watcher queue.
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
  */
+//观察者队列,将观察者压入队列中,如果队列刷新,存在重复的队列将被忽略
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
   if (has[id] == null) {
     has[id] = true
+    //是否完成
     if (!flushing) {
       queue.push(watcher)
     } else {
@@ -140,9 +152,14 @@ export function queueWatcher (watcher: Watcher) {
       queue.splice(i + 1, 0, watcher)
     }
     // queue the flush
+    //没有等待
     if (!waiting) {
       waiting = true
+      //向下执行
       nextTick(flushSchedulerQueue)
     }
   }
 }
+
+
+

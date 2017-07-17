@@ -67,14 +67,24 @@ export const hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys)
 
+
+
+
+
+
+
+
 /**
  * Defer a task to execute it asynchronously.
  */
+//推迟工作异步进行
 export const nextTick = (function () {
   const callbacks = []
   let pending = false
   let timerFunc
 
+
+  //向下处理
   function nextTickHandler () {
     pending = false
     const copies = callbacks.slice(0)
@@ -84,6 +94,8 @@ export const nextTick = (function () {
     }
   }
 
+
+
   // the nextTick behavior leverages the microtask queue, which can be accessed
   // via either native Promise.then or MutationObserver.
   // MutationObserver has wider support, however it is seriously bugged in
@@ -91,6 +103,10 @@ export const nextTick = (function () {
   // completely stops working after triggering a few times... so, if native
   // Promise is available, we will use it:
   /* istanbul ignore if */
+  // 这里是异步执行的部分,在初始化部分完成  
+  // 如果支持promise则使用promise 
+  // 不支持Promise 检查MutationObserver
+  // 都不支持使用 setTimeout 方式
   if (typeof Promise !== 'undefined' && isNative(Promise)) {
     var p = Promise.resolve()
     var logError = err => { console.error(err) }
@@ -128,23 +144,29 @@ export const nextTick = (function () {
     }
   }
 
+  //队列向下执行
   return function queueNextTick (cb?: Function, ctx?: Object) {
     let _resolve
+    //插入到回调队列
     callbacks.push(() => {
       if (cb) {
+        //这里执行 传入上下文
         try {
           cb.call(ctx)
         } catch (e) {
           handleError(e, ctx, 'nextTick')
         }
       } else if (_resolve) {
+        //promise resolve cb
         _resolve(ctx)
       }
     })
+    //如果没在等待 那么执行
     if (!pending) {
       pending = true
       timerFunc()
     }
+    //如果回调不存在并且promise可用 创建一个promise
     if (!cb && typeof Promise !== 'undefined') {
       return new Promise((resolve, reject) => {
         _resolve = resolve
@@ -152,6 +174,12 @@ export const nextTick = (function () {
     }
   }
 })()
+
+
+
+
+
+
 
 let _Set
 /* istanbul ignore if */

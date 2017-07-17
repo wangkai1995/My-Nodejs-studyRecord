@@ -112,6 +112,7 @@ export default class Watcher {
   }
 
 
+
   /**
    * Evaluate the getter, and re-collect dependencies.
    */
@@ -214,6 +215,7 @@ export default class Watcher {
    * Scheduler job interface.
    * Will be called by the scheduler.
    */
+  // 执行更新的是 this.get
   run () {
     if (this.active) {
       const value = this.get()

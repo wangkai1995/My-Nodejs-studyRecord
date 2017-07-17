@@ -20,6 +20,9 @@ import {
   removeTransitionClass
 } from '../transition-util'
 
+
+
+
 export function enter (vnode: VNodeWithData, toggleDisplay: ?() => void) {
   const el: any = vnode.elm
 
@@ -171,6 +174,10 @@ export function enter (vnode: VNodeWithData, toggleDisplay: ?() => void) {
   }
 }
 
+
+
+
+//卸载
 export function leave (vnode: VNodeWithData, rm: Function) {
   const el: any = vnode.elm
 

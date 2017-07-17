@@ -101,6 +101,7 @@ export function createPatchFunction (backend) {
   }
 
 
+  //创建卸载回调
   function createRmCb (childElm, listeners) {
     function remove () {
       if (--remove.listeners === 0) {
@@ -391,6 +392,7 @@ export function createPatchFunction (backend) {
       //如果存在钩子 destroy存在
       if (isDef(i = data.hook) && isDef(i = i.destroy)) i(vnode)
       //遍历销毁结点
+      //主要用来销毁ref和指令？
       for (i = 0; i < cbs.destroy.length; ++i) cbs.destroy[i](vnode)
     }
     //如果子节点存在 
@@ -403,14 +405,21 @@ export function createPatchFunction (backend) {
   }
 
 
+  //卸载虚拟节点
+  //传入真实父节点
+  //需要卸载的虚拟节点数组
+  //开始卸载的下标 卸载结束的下标
   function removeVnodes (parentElm, vnodes, startIdx, endIdx) {
     for (; startIdx <= endIdx; ++startIdx) {
       const ch = vnodes[startIdx]
+      //如果存在
       if (isDef(ch)) {
+        //如果是节点类型
         if (isDef(ch.tag)) {
           removeAndInvokeRemoveHook(ch)
           invokeDestroyHook(ch)
         } else { // Text node
+          //文本类型
           removeNode(ch.elm)
         }
       }
@@ -418,15 +427,18 @@ export function createPatchFunction (backend) {
   }
 
 
+  //执行卸载钩子
   function removeAndInvokeRemoveHook (vnode, rm) {
     if (isDef(rm) || isDef(vnode.data)) {
       let i
       const listeners = cbs.remove.length + 1
       if (isDef(rm)) {
+        // 这里是递归个向下卸载
         // we have a recursively passed down rm callback
         // increase the listeners count
         rm.listeners += listeners
       } else {
+        //直接卸载
         // directly removing
         rm = createRmCb(vnode.elm, listeners)
       }
@@ -585,6 +597,7 @@ export function createPatchFunction (backend) {
   }
 
 
+  //唤起插入回调
   function invokeInsertHook (vnode, queue, initial) {
     // delay insert hooks for component root nodes, invoke them after the
     // element is really inserted
@@ -596,6 +609,8 @@ export function createPatchFunction (backend) {
       }
     }
   }
+
+
 
   let bailed = false
   // list of modules that can skip create hook during hydration because they
@@ -786,7 +801,7 @@ export function createPatchFunction (backend) {
         }
         //如果父节点存在
         if (isDef(parentElm)) {
-          //卸载老虚拟节点
+          //卸载老节点
           removeVnodes(parentElm, [oldVnode], 0, 0)
         } else if (isDef(oldVnode.tag)) {
           //卸载老节点真实DOM
@@ -794,11 +809,12 @@ export function createPatchFunction (backend) {
         }
       }
     }
-    //执行插入
+    //唤起插入钩子
     invokeInsertHook(vnode, insertedVnodeQueue, isInitialPatch)
     return vnode.elm
   }
 }
+
 
 
 
