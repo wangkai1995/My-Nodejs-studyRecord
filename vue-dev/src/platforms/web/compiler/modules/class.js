@@ -37,6 +37,7 @@ function transformNode (el: ASTElement, options: CompilerOptions) {
   }
 }
 
+
 function genData (el: ASTElement): string {
   let data = ''
   if (el.staticClass) {
@@ -47,6 +48,7 @@ function genData (el: ASTElement): string {
   }
   return data
 }
+
 
 export default {
   staticKeys: ['staticClass'],

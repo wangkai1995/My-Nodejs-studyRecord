@@ -103,7 +103,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
-  //返回递归执行挂载函数
+  //返回执行挂载函数
   return mount.call(this, el, hydrating)
 }
 
