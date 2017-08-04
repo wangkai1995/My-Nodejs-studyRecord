@@ -31,6 +31,8 @@ export const emptyNode = new VNode('', {}, [])
 
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
 
+
+// 对比节点是否相等
 function sameVnode (a, b) {
   return (
     a.key === b.key && (
@@ -52,6 +54,7 @@ function sameVnode (a, b) {
 
 // Some browsers do not support dynamically changing type for <input>
 // so they need to be treated as different nodes
+// 相同input节点类型
 function sameInputType (a, b) {
   if (a.tag !== 'input') return true
   let i
@@ -95,10 +98,13 @@ export function createPatchFunction (backend) {
   }
 
 
+
   //传入一个真实元素创建一个空的虚拟节点
   function emptyNodeAt (elm) {
     return new VNode(nodeOps.tagName(elm).toLowerCase(), {}, [], undefined, elm)
   }
+
+
 
 
   //创建卸载回调
@@ -113,6 +119,9 @@ export function createPatchFunction (backend) {
   }
 
 
+
+
+  //删除节点
   function removeNode (el) {
     const parent = nodeOps.parentNode(el)
     // element may have already been removed due to v-html / v-text
@@ -120,6 +129,7 @@ export function createPatchFunction (backend) {
       nodeOps.removeChild(parent, el)
     }
   }
+
 
 
   //创建元素
@@ -213,6 +223,7 @@ export function createPatchFunction (backend) {
   }
 
 
+
   //创建组件
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
@@ -244,6 +255,7 @@ export function createPatchFunction (backend) {
   }
 
 
+
   //初始化组件
   function initComponent (vnode, insertedVnodeQueue) {
     if (isDef(vnode.data.pendingInsert)) {
@@ -261,6 +273,7 @@ export function createPatchFunction (backend) {
       insertedVnodeQueue.push(vnode)
     }
   }
+
 
 
   //重新创建组件
@@ -287,6 +300,7 @@ export function createPatchFunction (backend) {
   }
 
 
+
   //当前节点插入到父节点中
   function insert (parent, elm, ref) {
     if (isDef(parent)) {
@@ -299,6 +313,7 @@ export function createPatchFunction (backend) {
       }
     }
   }
+
 
 
   //创建子元素
@@ -317,12 +332,14 @@ export function createPatchFunction (backend) {
   }
 
 
+
   function isPatchable (vnode) {
     while (vnode.componentInstance) {
       vnode = vnode.componentInstance._vnode
     }
     return isDef(vnode.tag)
   }
+
 
 
   //创建元素的钩子函数

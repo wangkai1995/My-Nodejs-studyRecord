@@ -227,6 +227,7 @@ export function parseHTML (html, options) {
       }
 
     } else {
+      // 这一部分是用来解析 script style textarea 标签内容的部分
       var stackedTag = lastTag.toLowerCase()
       var reStackedTag = reCache[stackedTag] || (reCache[stackedTag] = new RegExp('([\\s\\S]*?)(</' + stackedTag + '[^>]*>)', 'i'))
       var endTagLength = 0

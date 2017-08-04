@@ -10,6 +10,7 @@ type DataGenFunction = (el: ASTElement) => string;
 type DirectiveFunction = (el: ASTElement, dir: ASTDirective, warn: Function) => boolean;
 
 
+
 //生成状态
 export class CodegenState {
   options: CompilerOptions;
@@ -43,6 +44,9 @@ export class CodegenState {
     this.staticRenderFns = []
   }
 }
+
+
+
 
 export type CodegenResult = {
   render: string,
@@ -394,6 +398,7 @@ function genDirectives (el: ASTElement, state: CodegenState): string | void {
 
 
 
+
 function genInlineTemplate (el: ASTElement, state: CodegenState): ?string {
   const ast = el.children[0]
   if (process.env.NODE_ENV !== 'production' && (
@@ -582,6 +587,9 @@ function genSlot (el: ASTElement, state: CodegenState): string {
   }
   return res + ')'
 }
+
+
+
 
 
 // componentName is el.component, take it as argument to shun flow's pessimistic refinement
