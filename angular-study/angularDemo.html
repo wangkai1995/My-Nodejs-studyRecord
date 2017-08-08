@@ -5,10 +5,30 @@
 <!-- <script src="./angular.js"></script> -->
 <script src="./angular-mini.js"></script>
 </head>
-<body>
 
 
-<!-- http://purplebamboo.github.io/2015/05/27/use-200-line-code-to-implementation-a-simple-angular/ -->
+
+<body ngl-controller="MainCtrl">
+    <span ngl-bind="bar"></span>
+    <input type="text" ngl-model="bar"/>
+    <button ngl-click="foo()">Increment</button>
+</body>
+
+<script>
+    window.onload = function(){
+
+        
+        Provider.controller('MainCtrl',function($scope){
+            $scope.bar = 0;
+            $scope.foo = function(){
+                $scope.bar += 1;
+            }
+        })
+
+        DOMCompiler.bootstrap();
+
+    }
+</script>
 
 <!-- <div ng-app="myApp" ng-controller="myCtrl"> // 1
     <div>{{testData.test}}</div>
@@ -38,7 +58,4 @@
         });
         
     </script> -->
-
 </html>
-
-
