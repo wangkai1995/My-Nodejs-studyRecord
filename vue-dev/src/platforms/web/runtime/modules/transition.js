@@ -23,6 +23,9 @@ import {
 
 
 
+//transition 指令
+
+
 export function enter (vnode: VNodeWithData, toggleDisplay: ?() => void) {
   const el: any = vnode.elm
 
@@ -41,6 +44,7 @@ export function enter (vnode: VNodeWithData, toggleDisplay: ?() => void) {
   if (isDef(el._enterCb) || el.nodeType !== 1) {
     return
   }
+
 
   const {
     css,
